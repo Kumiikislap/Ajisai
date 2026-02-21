@@ -1,0 +1,6 @@
+[submodule "extern/godot-cpp"]
+	path = extern/godot-cpp
+	url = https://github.com/godotengine/godot-cpp.git
+[submodule "extern/vcpkg"]
+	path = extern/vcpkg
+	url = https://github.com/microsoft/vcpkg.git
