@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://c3xg31v2yhoy2"]
+
+[node name="MainMenu" type="MainMenu" unique_id=808947999]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=46938575]
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=1215885482]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -131.5
+offset_right = 131.5
+offset_bottom = 280.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 64
+text = "Our very awesomee game title!!!!!!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer" unique_id=724993178]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ButtonManager" type="Control" parent="CanvasLayer/HBoxContainer" unique_id=961604706]
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="CanvasLayer/HBoxContainer/ButtonManager" unique_id=802050870]
+layout_mode = 0
+offset_left = -128.0
+offset_top = -20.0
+offset_right = 128.0
+offset_bottom = 44.0
+text = "Start Reading"
+
+[node name="SelectButton" type="Button" parent="CanvasLayer/HBoxContainer/ButtonManager" unique_id=584499880]
+layout_mode = 0
+offset_left = -128.0
+offset_top = 60.0
+offset_right = 128.0
+offset_bottom = 124.0
+text = "Chapter Selection"
+
+[node name="OptionsButton" type="Button" parent="CanvasLayer/HBoxContainer/ButtonManager" unique_id=1219222444]
+layout_mode = 0
+offset_left = -128.0
+offset_top = 140.0
+offset_right = 128.0
+offset_bottom = 204.0
+text = "Options"
+
+[node name="CreditsButton" type="Button" parent="CanvasLayer/HBoxContainer/ButtonManager" unique_id=701337666]
+layout_mode = 0
+offset_left = -128.0
+offset_top = 220.0
+offset_right = 128.0
+offset_bottom = 284.0
+text = "Credits"
+
+[node name="QuitButton" type="Button" parent="CanvasLayer/HBoxContainer/ButtonManager" unique_id=1697678078]
+layout_mode = 0
+offset_left = -128.0
+offset_top = 300.0
+offset_right = 128.0
+offset_bottom = 364.0
+text = "Quit"

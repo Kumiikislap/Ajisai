@@ -7,6 +7,7 @@
 
 #include "api/extension_interface.hpp"
 #include "main.h"
+#include "main_menu.h"
 #include "singletons/sglobal.h"
 #include "util/engine.hpp"
 
@@ -32,7 +33,7 @@ namespace rl
             return;
 
         godot::ClassDB::register_runtime_class<Main>();
-
+        godot::ClassDB::register_runtime_class<MainMenu>();
         godot::ClassDB::register_class<SGlobal>();
 
         initialize_static_objects();

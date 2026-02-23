@@ -13,4 +13,5 @@ void Main::_bind_methods()
 void Main::_ready()
 {
     UtilityFunctions::print(yuri);
+    
 }
