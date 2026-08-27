@@ -1,5 +1,6 @@
-#include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/variant/callable.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
+
 #include "main_menu.h"
 
 MainMenu::MainMenu()
@@ -14,7 +15,7 @@ void MainMenu::_bind_methods()
 void MainMenu::_ready()
 {
     Button* quit = get_node<Button>("CanvasLayer/HBoxContainer/ButtonManager/QuitButton");
-    quit -> connect("pressed", callable_mp(this, &MainMenu::quit_button));
+    quit->connect("pressed", callable_mp(this, &MainMenu::quit_button));
 }
 
 void MainMenu::quit_button()

@@ -18,6 +18,7 @@ namespace rl::inline utils
     {
         namespace node
         {
+			// set unique name [ %name ]
             template <typename TNode>
                 requires std::derived_from<TNode, godot::Node>
             static inline void set_unique_name(TNode* node, const char* name)

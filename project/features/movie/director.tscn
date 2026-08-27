@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://binnf7xvot6cr"]
+
+[ext_resource type="CharactersResource" uid="uid://bkdlownuo7uma" path="res://test/movie/characters_resource.tres" id="1_eosvv"]
+[ext_resource type="Resource" uid="uid://bgbb4b3a3lfex" path="res://resources/Test.dialogue" id="2_phuvs"]
+[ext_resource type="Script" uid="uid://cjp3q7rvg7w1n" path="res://features/movie/director.gd" id="3_rppdf"]
+[ext_resource type="Texture2D" uid="uid://dn3msfgm3qvdw" path="res://test/movie/actors/Turdus/img/happy.png" id="4_nikod"]
+
+[node name="Director" type="Director" unique_id=1262252801]
+cast = ExtResource("1_eosvv")
+dialogue_resource = ExtResource("2_phuvs")
+script = ExtResource("3_rppdf")
+current_mode = 2
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1551774066]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1146842995]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 2
+size_flags_vertical = 2
+mouse_filter = 1
+
+[node name="Happy" type="Sprite2D" parent="CanvasLayer/Control" unique_id=1183001092]
+texture = ExtResource("4_nikod")
+
+[node name="TweenAnimations" type="TweenAnimations" parent="." unique_id=1767975570]
+unique_name_in_owner = false

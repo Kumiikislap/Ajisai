@@ -1,0 +1,8 @@
+[gd_resource type="CharactersResource" format=3 uid="uid://bkdlownuo7uma"]
+
+[ext_resource type="ActorResource" uid="uid://bxhukq0noo05l" path="res://test/movie/actors/Turdus/turdus.tres" id="1_cmdhx"]
+
+[resource]
+characters = Dictionary[StringName, ActorResource]({
+&"Turdus": ExtResource("1_cmdhx")
+})
