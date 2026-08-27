@@ -1,0 +1,15 @@
+[gd_resource type="ActorResource" format=3 uid="uid://bxhukq0noo05l"]
+
+[ext_resource type="Texture2D" uid="uid://dn3msfgm3qvdw" path="res://test/movie/actors/Turdus/img/happy.png" id="1_igudt"]
+[ext_resource type="Texture2D" uid="uid://bf6c46wukygj0" path="res://test/movie/actors/Turdus/img/neutral.png" id="2_1mqnc"]
+[ext_resource type="Texture2D" uid="uid://cpaqnybrxbmgk" path="res://test/movie/actors/Turdus/img/shocked.png" id="3_bd16q"]
+[ext_resource type="Texture2D" uid="uid://bvmecqx2tc0fe" path="res://test/movie/actors/Turdus/img/smile.png" id="4_j68r7"]
+
+[resource]
+character_name = &"Turdus"
+character_expressions = Dictionary[StringName, CompressedTexture2D]({
+&"happy": ExtResource("1_igudt"),
+&"neutral": ExtResource("2_1mqnc"),
+&"shocked": ExtResource("3_bd16q"),
+&"smile": ExtResource("4_j68r7")
+})

@@ -11,6 +11,7 @@
   // detailed information to stederr, including a custom error
   // message when the condition evaluates to false.
   //
+  // condition that should never be true
   #define assertion(condition, message)                                             \
       do                                                                            \
       {                                                                             \

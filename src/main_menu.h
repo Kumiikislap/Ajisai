@@ -1,7 +1,7 @@
 #pragma once
 
-#include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/button.hpp>
+#include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/classes/scene_tree.hpp>
 
 using namespace godot;
@@ -22,5 +22,4 @@ protected:
     static void _bind_methods();
 
 private:
-
 };

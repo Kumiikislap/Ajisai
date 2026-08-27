@@ -1,0 +1,33 @@
+using MovieDataTest
+
+~ start
+do add_actor("Turdus")
+do set_actor_position("Turdus", left)
+Turdus: movie
+Turdus: One
+Turdus: This is some dialogue.  HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA . [wait] WORDDDDDDDDDDDDDDDDDDSSSSSSSSS MORE
+	MORE WORDSSSSSSSSSSSSSSSSSSSSSSSSS. 
+Turdus: ......	
+Turdus: movie [next=2]
+Turdus: One
+do change_expression("Turdus", "shocked")
+#do set_actor_position("Turdus", right)
+#do print_test()
+Turdus: Tweo
+do hide_actor("Turdus")
+do change_expression("Turdus", "smile", true) # true
+mia : what
+do show_actor("Turdus")
+do change_expression("Turdus", "happy")
+ : andaahjdahjbdahbdhj . adnandajdjandj whaaaaaaat. 
+ : asdnajd
+do change_expression("Turdus", "neutral")
+ : asdasd
+ : anda
+do change_expression("Turdus", "smile")
+ : asdnajd
+ : asdasd
+ : anda
+ : asdnajd
+ : asdasd
+=> END

@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=18
+type="Resource"
+uid="uid://cwvn0sdxmtmnp"
+path="res://.godot/imported/test_gdscript_dm.dialogue-4dbc495cd0e8f8876287849b7238714b.tres"
+
+[deps]
+
+source_file="res://resources/test_gdscript_dm.dialogue"
+dest_files=["res://.godot/imported/test_gdscript_dm.dialogue-4dbc495cd0e8f8876287849b7238714b.tres"]
+
+[params]
+
+defaults=true

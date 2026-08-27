@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://c2udmejyknkpe"]
+
+[ext_resource type="Script" uid="uid://c5jmxlapj655d" path="res://test/movie/actors_layer.gd" id="1_1n5sr"]
+
+[node name="ActorsLayer" type="ActorsLayer" unique_id=256181229]
+script = ExtResource("1_1n5sr")
