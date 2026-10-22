@@ -9,11 +9,11 @@
 cast = ExtResource("1_eosvv")
 dialogue_resource = ExtResource("2_phuvs")
 script = ExtResource("3_rppdf")
-current_mode = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1551774066]
 
 [node name="Control" type="Control" parent="CanvasLayer" unique_id=1146842995]
+visible = false
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5

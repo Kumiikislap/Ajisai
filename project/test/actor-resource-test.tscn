@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://8c48avmagc6m"]
+
+[ext_resource type="SpriteFrames" uid="uid://q83omn7sqdgw" path="res://test/resource/actor-resource.tres" id="1_iwbam"]
+
+[node name="Node2D" type="Node2D" unique_id=1937319911]
+
+[node name="pose" type="AnimatedSprite2D" parent="." unique_id=464237447]
+position = Vector2(679, 649)
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="expr" type="AnimatedSprite2D" parent="pose" unique_id=432123794]
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="expr-ni" type="AnimatedSprite2D" parent="pose" unique_id=1896742485]
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="pose-ni" type="AnimatedSprite2D" parent="." unique_id=1342994011]
+position = Vector2(679, 649)
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="expr" type="AnimatedSprite2D" parent="pose-ni" unique_id=956168618]
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="expr-ni" type="AnimatedSprite2D" parent="pose-ni" unique_id=691525863]
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"

@@ -87,7 +87,7 @@ func _ready() -> void:
 			assert(false, DMConstants.get_error_message(DMConstants.ERR_MISSING_RESOURCE_FOR_AUTOSTART))
 		start()
 	dialogue_label.finished_typing.connect(auto_progress)
-	DialogueManager.manually_waited.connect(auto_progress)
+	#DialogueManager.manually_waited.connect(auto_progress)
 
 
 func _process(delta: float) -> void:
