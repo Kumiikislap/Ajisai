@@ -86,7 +86,9 @@ func _ready() -> void:
 		if not is_instance_valid(dialogue_resource):
 			assert(false, DMConstants.get_error_message(DMConstants.ERR_MISSING_RESOURCE_FOR_AUTOSTART))
 		start()
+	# for auto mode
 	dialogue_label.finished_typing.connect(auto_progress)
+	# connect to dialogue 'wait' function/tag 
 	#DialogueManager.manually_waited.connect(auto_progress)
 
 
@@ -252,12 +254,13 @@ var auto_time :float = 2.0
 
 # called when finished typing is emitted
 func auto_progress():
+	print(dialogue_line.id)
 	if is_auto:
 		await get_tree().create_timer(auto_time).timeout
 		next(dialogue_line.next_id)
 	print("auto?")
 
-	
+
 func fast_forward():
 	if dialogue_label.is_typing:
 		dialogue_label.skip_typing()

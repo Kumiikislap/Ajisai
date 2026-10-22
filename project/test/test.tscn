@@ -5,14 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://dn3msfgm3qvdw" path="res://test/movie/actors/Turdus/img/happy.png" id="3_65205"]
 [ext_resource type="Script" uid="uid://cd3222nx3y3k5" path="res://addons/dialogue_manager/nodes/context/dialogue_state_context.gd" id="4_hrq6i"]
 [ext_resource type="Script" uid="uid://c8kftkf8tpjdh" path="res://test/canvas_layer.gd" id="5_tbfq4"]
-
-[sub_resource type="Animation" id="Animation_tbfq4"]
-resource_name = "test_anim"
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_s3n3v"]
-_data = {
-&"test_anim": SubResource("Animation_tbfq4")
-}
+[ext_resource type="PackedScene" uid="uid://cnixhaofyde15" path="res://features/movie/balloon.tscn" id="6_s3n3v"]
 
 [node name="Test" type="Node2D" unique_id=36089541]
 script = ExtResource("1_syuel")
@@ -37,5 +30,5 @@ metadata/_custom_type_script = "uid://cd3222nx3y3k5"
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=498168479]
 script = ExtResource("5_tbfq4")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=201371705]
-libraries/ = SubResource("AnimationLibrary_s3n3v")
+[node name="ExampleBalloon" parent="." unique_id=1434168376 instance=ExtResource("6_s3n3v")]
+unique_name_in_owner = true

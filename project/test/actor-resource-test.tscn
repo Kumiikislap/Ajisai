@@ -2,7 +2,7 @@
 
 [ext_resource type="SpriteFrames" uid="uid://q83omn7sqdgw" path="res://test/resource/actor-resource.tres" id="1_iwbam"]
 
-[node name="Node2D" type="Node2D" unique_id=1937319911]
+[node name="actor" type="Node2D" unique_id=1937319911]
 
 [node name="pose" type="AnimatedSprite2D" parent="." unique_id=464237447]
 position = Vector2(679, 649)
