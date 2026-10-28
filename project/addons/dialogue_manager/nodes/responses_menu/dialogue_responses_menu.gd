@@ -10,6 +10,7 @@ signal response_focused(response: Variant)
 ## Emitted when a response is selected.
 signal response_selected(response: Variant)
 
+signal response_showed
 
 ## Optionally specify a control to duplicate for each response
 @export var response_template: Control
@@ -99,6 +100,9 @@ func configure_focus() -> void:
 
 	if auto_focus_first_item:
 		items[0].grab_focus()
+		
+	#print("from response")
+	#response_showed.emit()
 
 
 #region Internal
@@ -171,6 +175,7 @@ func _on_response_mouse_entered(item: Control) -> void:
 
 
 func _on_response_gui_input(event: InputEvent, item: Control, response: Variant) -> void:
+	print("gui-rres" + event.as_text())
 	if "Disallowed" in item.name: return
 
 	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
@@ -182,3 +187,10 @@ func _on_response_gui_input(event: InputEvent, item: Control, response: Variant)
 
 
 #endregion
+
+
+#func _on_gui_input(event: InputEvent) -> void:
+	#print("gui-rres")
+	##if event.is_action_pressed("skip_dialogue_line"):
+		##print("gui-rres")
+		#

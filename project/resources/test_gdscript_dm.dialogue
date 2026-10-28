@@ -1,14 +1,23 @@
-using MovieDataTest
+using MovieDataTest 
+# needs to be autoloaded to be used in using whatever that is called
 
 ~ start
-Nathan: [[Hi|Hello|Howdy]], this is some dialogue.
+Miao : a
+Nathan: [[Hi|Hello|Howdy]], this is some dialogue. 
+#do add_actor("Turdus")
+#do set_actor_position(Turdus, right)
 Nathan: Here are some choices.
+Turdus: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+- bro
+	Miao: skip pls
+Turdus: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.
 - First one
 	Nathan: You picked the first one.
 - Second one
 	Nathan: You picked the second one.
 - Start again => start
 Turdus: ha
+Turdus: from GDE
 do print(Turdus)
 - End the conversation => END
 Nathan: For more information see the online documentation.

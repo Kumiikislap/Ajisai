@@ -41,7 +41,15 @@ namespace rl::inline constants
         constexpr inline auto body_entered{ "body_entered" };
         constexpr inline auto body_exited{ "body_exited" };
         constexpr inline auto signal_example{ "custom_signal_example" };
+        constexpr inline auto mutated{ "mutated" };
     }
+
+	namespace input_map_action  
+	{
+		constexpr inline auto auto_hotkey{ "auto_hotkey" };
+		constexpr inline auto fast_forward_dialogue{ "fast_forward_dialogue" };
+		constexpr inline auto skip_dialogue_line{ "skip_dialogue_line" };
+	}
 
     enum class LayerID : uint32_t {
         Player = 0x00000001,

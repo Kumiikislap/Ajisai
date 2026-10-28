@@ -7,28 +7,37 @@
 
 #include "api/extension_interface.hpp"
 #include "features/movie/Actor.h"
+#include "features/movie/SceneStateAuto.h"
+#include "features/movie/SceneStateFastForward.h"
+#include "features/movie/SceneStateNormal.h"
+#include "godot_cpp/classes/packed_scene.hpp"
 #include "godot_cpp/core/class_db.hpp"
-#include "main.h"
-#include "main_menu.h"
 #include "singletons/sglobal.h"
 #include "util/engine.hpp"
 
 #include "features/movie/ActorResource.h"
 #include "features/movie/CharactersResource.h"
 #include "features/movie/Director.h"
-#include "services/DialogueManagerWrapper.h"
+#include "features/services/DialogueManagerWrapper.h"
 #include "features/movie/Actor.h"
 #include "features/movie/ActorsLayer.h"
-#include "features/movie/TweenAnimations.h"
+#include "features/services/TweenAnimations.h"
+#include "features/movie/SceneMenu.h"
+#include "features/movie/SceneStates.h"
+#include "features/services/TweenAnimations.h"
+#include "test/main.h"
+#include "features/title/main_menu.h"
 
 namespace rl
 {
     //static inline SGlobal* global_singleton{ nullptr };
+	//static inline DialogueManagerWrapper* dialogue_manager_wrapper { nullptr };
 
     void initialize_static_objects()
     {
         //global_singleton = memnew(SGlobal);
         //rl::engine::get()->register_singleton("SGlobal", SGlobal::get_ins());
+		//Engine::get_singleton()->register_singleton("DialogueManagerWrapper", memnew(DialogueManagerWrapper));
     }
 
     void teardown_static_objects()
@@ -49,11 +58,19 @@ namespace rl
 		godot::ClassDB::register_runtime_class<ActorResource>();
 		godot::ClassDB::register_runtime_class<CharactersResource>();
 		godot::ClassDB::register_runtime_class<Director>();
-		godot::ClassDB::register_runtime_class<DialogueManagerWrapper>();
 		godot::ClassDB::register_runtime_class<Actor>();
 		godot::ClassDB::register_runtime_class<ActorsLayer>();
 		godot::ClassDB::register_runtime_class<TweenAnimations>();
+		godot::ClassDB::register_runtime_class<SceneMenu>();
 
+		godot::ClassDB::register_runtime_class<DialogueManagerWrapper>();
+
+		GDREGISTER_VIRTUAL_CLASS(SceneStates);
+		GDREGISTER_CLASS(SceneStateAuto);
+		GDREGISTER_CLASS(SceneStateFastForward);
+		GDREGISTER_CLASS(SceneStateNormal);
+
+		//godot::ClassDB::register_class<DialogueManagerWrapper>();
 
         initialize_static_objects();
     }

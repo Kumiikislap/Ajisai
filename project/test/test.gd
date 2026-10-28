@@ -1,8 +1,10 @@
 extends Node
 
 @export var mcharacters : CharactersResource
+@export var is_fast_forward : bool = true
 const BALLOON = preload("uid://cnixhaofyde15")
 var actor : ActorResource
+
 
 @onready var dialogue_box : Balloon = %ExampleBalloon
 
@@ -14,14 +16,28 @@ var tween : Tween
 func _ready() -> void: 
 	#show_dialogue()
 	# passing the line id to cue arguments works like magic
-	#DialogueManager.show_dialogue_balloon(dialogue_resource, 'cwvn0sdxmtmnp@4')
+	DialogueManager.show_dialogue_balloon(dialogue_resource, 'cwvn0sdxmtmnp@4')
 	#var line = await DialogueManager.get_next_dialogue_line(dialogue_resource, "cwvn0sdxmtmnp@4")
 	#print(line)
 	#%Sprite2D.modulate.a = 0.0
+	#dialogue_manager_wrapper.show_dialogue(dialogue_resource, 'start')
+	#dialogue_manager_wrapper.show_dialogue(dialogue_resource, 'start')
+	
 	pass
 
-func show_dialogue():
-	dialogue_box = DialogueManager.show_dialogue_balloon_scene(BALLOON, dialogue_resource, 'start')
+func _process(delta: float) -> void:
+	#print("procs")
+	if is_fast_forward:
+		is_fast_forward = false
+		print("tick")
+		get_tree().create_timer(2).timeout.connect(await_me)
+		#is_fast_forward = true
+	pass
+func await_me():
+	is_fast_forward = true
+	
+func show_dialogue(): pass
+	#dialogue_box = DialogueManager.show_dialogue_balloon_scene(BALLOON, dialogue_resource, 'start')
 	
 
 func _unhandled_key_input(_event: InputEvent) -> void:

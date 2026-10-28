@@ -1,6 +1,7 @@
 class_name Balloon extends CanvasLayer
 ## A basic dialogue balloon for use with Dialogue Manager.
 
+@export var scene_menu : SceneMenu
 
 ## The dialogue resource
 @export var dialogue_resource: DialogueResource
@@ -20,8 +21,11 @@ class_name Balloon extends CanvasLayer
 ## The action to use to skip typing the dialogue
 @export var skip_action: StringName = &"ui_cancel"
 
+
 ## A sound player for voice lines (if they exist).
 @onready var audio_stream_player: AudioStreamPlayer = %AudioStreamPlayer
+
+
 
 ## Temporary game states
 var temporary_game_states: Array = []
@@ -45,7 +49,8 @@ var dialogue_line: DialogueLine:
 			apply_dialogue_line()
 		else:
 			# The dialogue has finished so close the balloon
-			if owner == null:
+			if owner == null: 
+				#hide()
 				queue_free()
 			else:
 				hide()
@@ -73,6 +78,8 @@ var mutation_cooldown: Timer = Timer.new()
 
 func _ready() -> void:
 	balloon.hide()
+	#assert(dialogue_manager_wrapper != null, "dialogue_manager_wrapper is null!")
+	#dialogue_manager_wrapper.mutated.connect(_on_mutated)
 	Engine.get_singleton("DialogueManager").mutated.connect(_on_mutated)
 
 	# If the responses menu doesn't have a next action set, use this one
@@ -86,8 +93,13 @@ func _ready() -> void:
 		if not is_instance_valid(dialogue_resource):
 			assert(false, DMConstants.get_error_message(DMConstants.ERR_MISSING_RESOURCE_FOR_AUTOSTART))
 		start()
+	
+	#responses_menu.response_showed.connect(_on_responses_show)
 	# for auto mode
 	dialogue_label.finished_typing.connect(auto_progress)
+	auto_timer.timeout.connect(next_dialogue)
+	auto_timer.one_shot = true
+	add_child(auto_timer)
 	# connect to dialogue 'wait' function/tag 
 	#DialogueManager.manually_waited.connect(auto_progress)
 
@@ -96,14 +108,10 @@ func _process(delta: float) -> void:
 	if is_instance_valid(dialogue_line):
 		progress.visible = not dialogue_label.is_typing and dialogue_line.responses.size() == 0 and not dialogue_line.has_tag("voice")
 
-
-
 func _unhandled_input(_event: InputEvent) -> void:
 	# Only the balloon is allowed to handle input while it's showing
 	if will_block_other_input:
 		get_viewport().set_input_as_handled()
-		
-
 
 func _notification(what: int) -> void:
 	## Detect a change of locale and update the current dialogue line to show the new language
@@ -160,7 +168,7 @@ func apply_dialogue_line() -> void:
 		audio_stream_player.play()
 		await audio_stream_player.finished
 		next(dialogue_line.next_id)
-	elif dialogue_line.responses.size() > 0:
+	elif dialogue_line.responses.size() > 0: 
 		balloon.focus_mode = Control.FOCUS_NONE
 		responses_menu.show()
 	elif dialogue_line.time != "":
@@ -192,18 +200,40 @@ func _on_mutated(mutation: Dictionary) -> void:
 		is_waiting_for_input = false
 		will_hide_balloon = true
 		mutation_cooldown.start(0.1)
+		
+func _on_responses_show():
+	var input_action := InputEventAction.new()
+	input_action.action = skip_action
+	input_action.pressed = true
+	_on_balloon_gui_input(input_action)
+	print("tf")
 
 
 func _on_balloon_gui_input(event: InputEvent) -> void:
+	print(event.as_text())
 	# See if we need to skip typing of the dialogue
+	var mouse_was_clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
+	var skip_button_was_pressed: bool = event.is_action_pressed(skip_action)
+	
+	# return to normal state when skipping in auto
+	if scene_menu.scene_state is SceneStateAuto:
+		if mouse_was_clicked or skip_button_was_pressed: 
+			auto_timer.stop()
+			print("auto-stop")
+			scene_menu.simulate_keys_for_states(SceneMenu.NORMAL)
+	
+	# skip dialogue text typing
 	if dialogue_label.is_typing:
-		var mouse_was_clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
-		var skip_button_was_pressed: bool = event.is_action_pressed(skip_action)
 		if mouse_was_clicked or skip_button_was_pressed:
 			#get_viewport().set_input_as_handled()
+			if scene_menu.scene_state is SceneStateAuto:
+				auto_timer.stop()
+				print("auto-stop")
+				scene_menu.simulate_keys_for_states(SceneMenu.NORMAL)
+				dialogue_label.skip_typing()
 			dialogue_label.skip_typing()
 			return
-
+	
 	if not is_waiting_for_input: return
 	if dialogue_line.responses.size() > 0: return
 
@@ -219,49 +249,49 @@ func _on_balloon_gui_input(event: InputEvent) -> void:
 func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 	next(response.next_id)
 
-
 #endregion
 
+
+
+@export var is_auto := false
+var auto_timer := Timer.new()
+
 var is_fast_forward := false
-
-#func custom_input(_input : InputEvent):
-	#if Input.is_action_pressed("fast_forward_dialogue"):
-		#pass
-
-#func _unhandled_key_input(event: InputEvent) -> void:
-	#if Input.is_action_just_pressed("fast_forward_dialogue"):
-		#is_fast_forward = true
-	#elif  Input.is_action_just_released("fast_forward_dialogue"):
-		#is_fast_forward = false
-	
-#func _shortcut_input(event: InputEvent) -> void:
-	#if Input.is_action_pressed("fast_forward_dialogue"):
-			##if Input.is_action_pressed("fast_forward_dialogue"):
-		#fast_forward()
-		#print('fforward')
+var auto_delay := 2.0
 
 #func _physics_process(delta: float) -> void:
-	##if Input.is_action_pressed("fast_forward_dialogue"):
-		##fast_forward()
-		#if is_fast_forward:
-			#fast_forward()
-			#Engine.time_scale = 2
-		#else:
-			#Engine.time_scale = 1
-		#print(Engine.time_scale)
-@export var is_auto := false
-var auto_time :float = 2.0
 
-# called when finished typing is emitted
+#func _unhandled_key_input(event: InputEvent) -> void:
+
+
+# called when text is done typing or initiated by auto state
 func auto_progress():
-	print(dialogue_line.id)
-	if is_auto:
-		await get_tree().create_timer(auto_time).timeout
-		next(dialogue_line.next_id)
-	print("auto?")
+	print(dialogue_line.text)
+	
+	# check if we reached a response dialogue and grab focus
+	if dialogue_line.responses.size() > 0:
+		var items: Array = responses_menu.get_menu_items()
+		items[0].grab_focus()
+		return
+	# auto delay before proceeding to next line
+	if dialogue_label.is_finished():
+		auto_timer.start(auto_delay)
 
+# auto delay before proceeding to next line
+func auto_start_timer():
+	auto_timer.start(auto_delay)
+
+func next_dialogue():
+	if scene_menu.scene_state is SceneStateAuto:
+		next(dialogue_line.next_id)
+
+func ball():
+	print("print")
 
 func fast_forward():
 	if dialogue_label.is_typing:
 		dialogue_label.skip_typing()
+	# check if we reached a response dialogue
+	if dialogue_line.responses.size() > 0:
+		return
 	next(dialogue_line.next_id)

@@ -35,3 +35,5 @@ autoplay = "idle"
 sprite_frames = ExtResource("1_iwbam")
 animation = &"happy"
 autoplay = "idle"
+
+[node name="DialogueManagerWrapper" type="DialogueManagerWrapper" parent="." unique_id=419644312]

@@ -3,7 +3,7 @@
 #include <godot_cpp/classes/node.hpp>
 #include "godot_cpp/classes/wrapped.hpp"
 
-#include "services/DialogueManagerWrapper.h"
+#include "DialogueManagerWrapper.h"
 
 using namespace godot;
 
