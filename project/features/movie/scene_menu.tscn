@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://2wugggejfsn"]
+
+[ext_resource type="Resource" uid="uid://cwvn0sdxmtmnp" path="res://resources/test_gdscript_dm.dialogue" id="1_b8eqe"]
+[ext_resource type="Script" uid="uid://wkntdthi4n0g" path="res://features/movie/scene_menu.gd" id="1_wfa4a"]
+[ext_resource type="PackedScene" uid="uid://buyvpsealti3c" path="res://features/movie/director.tscn" id="4_audfc"]
+[ext_resource type="PackedScene" uid="uid://caurgbj2pjvcn" path="res://features/movie/vertical_balloon.tscn" id="5_2q8ij"]
+[ext_resource type="PackedScene" uid="uid://cnixhaofyde15" path="res://features/movie/balloon.tscn" id="5_f718d"]
+
+[node name="SceneMenu" type="SceneMenu" unique_id=1344113244 node_paths=PackedStringArray("dialogue_box")]
+dialogue_resource = ExtResource("1_b8eqe")
+dialogue_box = NodePath("VerticalBalloon")
+script = ExtResource("1_wfa4a")
+
+[node name="Director" parent="." unique_id=1882625696 instance=ExtResource("4_audfc")]
+
+[node name="VerticalBalloon" parent="." unique_id=1434168376 node_paths=PackedStringArray("scene_menu") instance=ExtResource("5_2q8ij")]
+scene_menu = NodePath("..")
+next_action = &"skip_dialogue_line"
+skip_action = &"skip_dialogue_line"
+
+[node name="ResponsesMenu" parent="VerticalBalloon/Balloon" parent_id_path=PackedInt32Array(1434168376, 359403728) index="1" unique_id=966297223]
+auto_focus_first_item = false
+
+[node name="Balloon" parent="." unique_id=1245734364 instance=ExtResource("5_f718d")]
+
+[node name="Button" type="Button" parent="." unique_id=616593930]
+offset_right = 8.0
+offset_bottom = 8.0
+text = "call_state"
+
+[connection signal="gui_input" from="VerticalBalloon/Balloon/ResponsesMenu" to="VerticalBalloon/Balloon/ResponsesMenu" method="_on_gui_input"]
+
+[editable path="VerticalBalloon"]

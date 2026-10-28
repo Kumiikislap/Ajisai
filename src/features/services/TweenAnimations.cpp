@@ -1,4 +1,4 @@
-#include "features/movie/TweenAnimations.h"
+#include "TweenAnimations.h"
 #include "util/scene.hpp"
 
 TweenAnimations::TweenAnimations()

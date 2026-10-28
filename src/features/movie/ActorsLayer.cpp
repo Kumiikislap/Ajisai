@@ -10,8 +10,13 @@ ActorsLayer::ActorsLayer()
 	add_child(left_preset_control);
 	add_child(middle_preset_control);
 	add_child(right_preset_control);
+	left_preset_control->set_owner(this);
+	middle_preset_control->set_owner(this);
+	right_preset_control->set_owner(this);
 
 	add_child(control_layer);
+	control_layer->set_owner(this);
+
 	rl::scene::node::set_unique_name(control_layer, "ControlLayer");
 	//control_layer->set_anchors_preset(Control::LayoutPreset::PRESET_CENTER);
 

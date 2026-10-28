@@ -6,7 +6,7 @@
 #include "godot_cpp/classes/ref.hpp"
 #include "godot_cpp/classes/resource.hpp"
 #include "util/bind.hpp"
-#include "core/constants.hpp"
+#include "core/rl_constants.hpp"
 
 using namespace godot;
 

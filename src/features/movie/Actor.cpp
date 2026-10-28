@@ -58,6 +58,7 @@ void Actor::create_actor()
 void Actor::change_expression(StringName p_expression, bool p_is_cut = false, bool p_is_different_pose = false)
 {
 	// TODO add cut anim for different poses -- if different pose
+	// check if fast-forwarding
 	if (tween.is_valid() and  tween->is_running())
 	{
 		//tween->set_speed_scale(100);

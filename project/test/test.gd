@@ -1,17 +1,44 @@
 extends Node
 
 @export var mcharacters : CharactersResource
+@export var is_fast_forward : bool = true
+const BALLOON = preload("uid://cnixhaofyde15")
 var actor : ActorResource
 
-var avenix
-var crowe
 
+@onready var dialogue_box : Balloon = %ExampleBalloon
+
+var dialogue_resource := load("res://resources/test_gdscript_dm.dialogue")
 
 var what := false
 var tween : Tween
 
-func _ready() -> void: pass
+func _ready() -> void: 
+	#show_dialogue()
+	# passing the line id to cue arguments works like magic
+	DialogueManager.show_dialogue_balloon(dialogue_resource, 'cwvn0sdxmtmnp@4')
+	#var line = await DialogueManager.get_next_dialogue_line(dialogue_resource, "cwvn0sdxmtmnp@4")
+	#print(line)
 	#%Sprite2D.modulate.a = 0.0
+	#dialogue_manager_wrapper.show_dialogue(dialogue_resource, 'start')
+	#dialogue_manager_wrapper.show_dialogue(dialogue_resource, 'start')
+	
+	pass
+
+func _process(delta: float) -> void:
+	#print("procs")
+	if is_fast_forward:
+		is_fast_forward = false
+		print("tick")
+		get_tree().create_timer(2).timeout.connect(await_me)
+		#is_fast_forward = true
+	pass
+func await_me():
+	is_fast_forward = true
+	
+func show_dialogue(): pass
+	#dialogue_box = DialogueManager.show_dialogue_balloon_scene(BALLOON, dialogue_resource, 'start')
+	
 
 func _unhandled_key_input(_event: InputEvent) -> void:
 	get_viewport().set_input_as_handled()
@@ -28,10 +55,14 @@ func _unhandled_key_input(_event: InputEvent) -> void:
 		#tween.tween_await(tween.finished)
 		what = true
 
-		
+
 	elif  Input.is_action_just_pressed("test"):
+		# start dialogue box
+		if is_instance_valid(dialogue_box):
+			dialogue_box.start(dialogue_resource, 'cwvn0sdxmtmnp@4')
+			#dialogue_box.queue_free()
 		#is_fast_forward = false
-		wtf()
+		#wtf()
 		print("real")
 
 func wtf():

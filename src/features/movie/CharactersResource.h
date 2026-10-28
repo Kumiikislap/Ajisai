@@ -10,6 +10,7 @@
 #include <godot_cpp/variant/string_name.hpp>
 
 #include "ActorResource.h"
+#include "godot_cpp/variant/variant.hpp"
 
 using namespace godot;
 

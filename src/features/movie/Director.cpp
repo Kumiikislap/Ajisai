@@ -4,10 +4,13 @@
 #include "features/movie/Actor.h"
 #include "features/movie/ActorResource.h"
 #include "features/movie/CharactersResource.h"
-#include "features/movie/TweenAnimations.h"
+#include "godot_cpp/classes/canvas_layer.hpp"
 #include "godot_cpp/classes/control.hpp"
 #include "godot_cpp/classes/node.hpp"
+#include "godot_cpp/classes/ref.hpp"
+#include "godot_cpp/classes/script.hpp"
 #include "godot_cpp/core/class_db.hpp"
+#include "godot_cpp/core/error_macros.hpp"
 #include "godot_cpp/core/object.hpp"
 #include "godot_cpp/core/property_info.hpp"
 #include "godot_cpp/templates/vector.hpp"
@@ -24,7 +27,7 @@ Director::Director()
 
 void Director::build_services()
 {
-	this->add_child(dialogue_manager);
+	//this->add_child(dialogue_manager);
 }
 
 void Director::_bind_methods()
@@ -34,7 +37,7 @@ void Director::_bind_methods()
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "cast", godot::PROPERTY_HINT_RESOURCE_TYPE, "CharactersResource"), "set_cast", "get_cast");
 
 	rl::bind_property(Director, dialogue_resource, Ref<Resource>);
-	rl::bind_property(Director, dialogue_box, Control*);
+	rl::bind_property(Director, dialogue_box, CanvasLayer*);
 	ClassDB::bind_method(D_METHOD("add_actor", "name"), &Director::add_actor);
 	ClassDB::bind_method(D_METHOD("change_expression", "name", "expression", "is_cut", "is_different_pose"), &Director::change_expression, DEFVAL(""), DEFVAL(""), DEFVAL(false), DEFVAL(false));
 	ClassDB::bind_method(D_METHOD("set_actor_position", "name", "position"), &Director::set_actor_position);
@@ -49,28 +52,41 @@ void Director::_bind_methods()
 // overrided in gdscript
 void Director::_ready()
 {
+	//init_from_gdscript();
 }
 
 // called from ready in gdscipt
 void Director::init_from_gdscript()
 {
+
+	//this->build_services();
 	//this->add_child(tween_animations);
 	this->add_child(actors_layer);
-	UtilityFunctions::printerr(characters_in_scene.keys());
+	actors_layer->set_owner(this);
+	//UtilityFunctions::printerr(characters_in_scene.keys());
 
-	Node* tween_anim  = this->find_child("TweenAnimations");
-	tween_animations = rl::gdcast<TweenAnimations>(tween_anim);
+	//Node* tween_anim  = this->find_child("TweenAnimations");
+	//tween_animations = rl::gdcast<TweenAnimations>(tween_anim);
 }
+
 
 void Director::add_actor(StringName p_name)
 {
 	UtilityFunctions::print( this->cast->characters.get(p_name, nullptr));
 	UtilityFunctions::print( this->cast->characters.has(p_name));
+	if (cast != nullptr)
+	{
+		assert("cast is null!");
+	}
 
 	// check if the cast has the character name argument
 	// a condition that should be always true
 	assert(cast->characters.has(p_name) and "Can't find actor name!");
 	// check if actor already exist in scene
+	if (characters_in_scene.has(p_name))
+	{
+		return;
+	}
 	assert(not characters_in_scene.has(p_name) and "actor already exist in scene!");
 
 	Ref<ActorResource> chara = cast->characters.get(p_name, nullptr);
@@ -115,7 +131,7 @@ void Director::set_actor_position(StringName p_name, Vector2 pos)
 void Director::set_actor_preset_position(StringName p_name, ActorsLayer::POSITION_PRESET p_preset )
 {
 	Actor* actor = get_actor_from_scene(p_name);
-	actors_layer->set_actor_preset_position(actor, p_preset);
+	//actors_layer->set_actor_preset_position(actor, p_preset);
 }
 
 void Director::remove_active_actor(StringName p_name)
@@ -161,12 +177,12 @@ Ref<Resource> Director::get_dialogue_resource() const
 	return dialogue_resource;
 }
 
-void Director::set_dialogue_box(Control* p_box)
+void Director::set_dialogue_box(CanvasLayer* p_box)
 {
 	this->dialogue_box = p_box;
 }
 
-Control* Director::get_dialogue_box() const
+CanvasLayer* Director::get_dialogue_box() const
 {
 	return this->dialogue_box ;
 }

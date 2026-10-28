@@ -1,12 +1,10 @@
 #pragma once
 #include <optional>
 #include <godot_cpp/classes/node.hpp>
-#include "features/movie/ActorsLayer.h"
 #include "godot_cpp/classes/ref.hpp"
 #include "godot_cpp/classes/tween.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
 #include <godot_cpp/classes/property_tweener.hpp>
-#include "Actor.h"
 #include "godot_cpp/variant/utility_functions.hpp"
 #include "godot_cpp/variant/vector2.hpp"
 #include "util/bind.hpp"
@@ -109,5 +107,5 @@ class TweenAnimations : public Node
 		float slide_duration { 0.5 };
 		float slide_distance { 80.0 };
 		Tween::EaseType slide_ease;;
-		Tween::TransitionType slide_trans;;
+		Tween::TransitionType slide_trans;
 };
