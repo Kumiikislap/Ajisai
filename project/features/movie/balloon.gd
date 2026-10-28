@@ -104,7 +104,7 @@ func _ready() -> void:
 	#DialogueManager.manually_waited.connect(auto_progress)
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if is_instance_valid(dialogue_line):
 		progress.visible = not dialogue_label.is_typing and dialogue_line.responses.size() == 0 and not dialogue_line.has_tag("voice")
 
@@ -210,7 +210,6 @@ func _on_responses_show():
 
 
 func _on_balloon_gui_input(event: InputEvent) -> void:
-	print(event.as_text())
 	# See if we need to skip typing of the dialogue
 	var mouse_was_clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
 	var skip_button_was_pressed: bool = event.is_action_pressed(skip_action)
@@ -251,7 +250,7 @@ func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 
 #endregion
 
-
+# TODO send response text to history log menu
 
 @export var is_auto := false
 var auto_timer := Timer.new()
