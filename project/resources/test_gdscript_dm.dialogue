@@ -4,8 +4,8 @@ using MovieDataTest
 ~ start
 Miao : a
 Nathan: [[Hi|Hello|Howdy]], this is some dialogue. 
-#do add_actor("Turdus")
-#do set_actor_position(Turdus, right)
+do add_actor("Turdus")
+do set_actor_position(Turdus, right)
 Nathan: Here are some choices.
 Turdus: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 - bro
