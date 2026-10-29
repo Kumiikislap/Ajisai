@@ -7,7 +7,6 @@
 #include "godot_cpp/classes/resource.hpp"
 #include "godot_cpp/variant/dictionary.hpp"
 
-#include "godot_cpp/variant/string_name.hpp"
 #include "util/bind.hpp"
 
 

@@ -50,7 +50,6 @@ var dialogue_line: DialogueLine:
 		else:
 			# The dialogue has finished so close the balloon
 			if owner == null: 
-				#hide()
 				queue_free()
 			else:
 				hide()
@@ -78,8 +77,6 @@ var mutation_cooldown: Timer = Timer.new()
 
 func _ready() -> void:
 	balloon.hide()
-	#assert(dialogue_manager_wrapper != null, "dialogue_manager_wrapper is null!")
-	#dialogue_manager_wrapper.mutated.connect(_on_mutated)
 	Engine.get_singleton("DialogueManager").mutated.connect(_on_mutated)
 
 	# If the responses menu doesn't have a next action set, use this one
@@ -94,7 +91,6 @@ func _ready() -> void:
 			assert(false, DMConstants.get_error_message(DMConstants.ERR_MISSING_RESOURCE_FOR_AUTOSTART))
 		start()
 	
-	#responses_menu.response_showed.connect(_on_responses_show)
 	# for auto mode
 	dialogue_label.finished_typing.connect(auto_progress)
 	auto_timer.timeout.connect(next_dialogue)
@@ -200,13 +196,6 @@ func _on_mutated(mutation: Dictionary) -> void:
 		is_waiting_for_input = false
 		will_hide_balloon = true
 		mutation_cooldown.start(0.1)
-		
-func _on_responses_show():
-	var input_action := InputEventAction.new()
-	input_action.action = skip_action
-	input_action.pressed = true
-	_on_balloon_gui_input(input_action)
-	print("tf")
 
 
 func _on_balloon_gui_input(event: InputEvent) -> void:

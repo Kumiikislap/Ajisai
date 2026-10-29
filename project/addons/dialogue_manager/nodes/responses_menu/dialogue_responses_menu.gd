@@ -10,7 +10,6 @@ signal response_focused(response: Variant)
 ## Emitted when a response is selected.
 signal response_selected(response: Variant)
 
-signal response_showed
 
 ## Optionally specify a control to duplicate for each response
 @export var response_template: Control
@@ -21,6 +20,7 @@ signal response_showed
 ## Automatically set up focus neighbours when the responses list changes.
 @export var auto_configure_focus: bool = true
 
+# disable or you cant skip dialogue when next line is a response
 ## Automatically focus the first item when showing.
 @export var auto_focus_first_item: bool = true
 
