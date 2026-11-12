@@ -61,3 +61,4 @@ void SceneStateAuto::enter(SceneMenu& scene_menu)
 void SceneStateAuto::exit(SceneMenu& scene_menu)
 {
 }
+

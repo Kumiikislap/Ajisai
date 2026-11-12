@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/resource.hpp>
 #include "features/movie/Director.h"
 #include "features/movie/SceneStates.h"
+#include "godot_cpp/classes/global_constants.hpp"
 #include "godot_cpp/classes/input.hpp"
 #include "godot_cpp/classes/node.hpp"
 #include "godot_cpp/classes/ref.hpp"
@@ -12,7 +13,6 @@
 #include "godot_cpp/core/binder_common.hpp"
 #include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/string_name.hpp"
-#include "godot_cpp/variant/typed_array.hpp"
 #include "util/input.hpp"
 #include <godot_cpp/classes/timer.hpp>
 
@@ -23,6 +23,7 @@
 using namespace godot;
 
 class SceneStates;
+class CommandStack;
 
 class SceneMenu : public CanvasLayer
 {
@@ -32,6 +33,11 @@ public:
 
 	SceneMenu();
 	~SceneMenu();
+
+	enum DialogueBox {
+		HORIZONTAL,
+		VERTICAL,
+	} dialogue_box;
 
 	virtual void _ready() override;
 	virtual void _process(double delta) override;
@@ -50,6 +56,9 @@ public:
 
 	void auto_dialogue();
 	void fast_forward_dialogue();
+
+	void show_dialogue_box(DialogueBox p_box);
+	void hide_dialogue_box(DialogueBox p_box);
 
 	void set_dialogue_resource(const Ref<Resource> p_resource);
 	void set_dialogue_box(CanvasLayer* const p_box);
@@ -73,11 +82,11 @@ private:
 	TypedDictionary<StringName, SceneStates> states;
 
 	Array register_apis;
-
 	CommandStack* cmdstack = { nullptr };
 
 	StringName line { "start" };
-	CanvasLayer* dialogue_box { nullptr };
+	CanvasLayer* current_dialogue_box { nullptr };
+	CanvasLayer* horizontal_dialogue_box { nullptr };
 	CanvasLayer* vertical_dialogue_box { nullptr };
 	Ref<Resource> dialogue_resource { nullptr };
 };

@@ -14,15 +14,8 @@ using namespace godot;
 class CommandResource  : public Resource
 {
 	GDCLASS(CommandResource, Resource)
-
-protected:
-	static void _bind_methods()
-	{
-		ClassDB::bind_method(D_METHOD("set_command_stack", "p_stack"), &CommandResource::set_command_stack);
-		ClassDB::bind_method(D_METHOD("get_command_stack" ), &CommandResource::get_command_stack);
-		ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "command_stack", godot::PROPERTY_HINT_ARRAY_TYPE, "Array"), "set_command_stack", "get_command_stack");
-	}
-
+	
+public:
 	void set_command_stack(TypedArray<Command> p_stack)
 	{
 		command_stack = p_stack;
@@ -33,6 +26,16 @@ protected:
 		return command_stack;
 	}
 
+protected:
+	static void _bind_methods()
+	{
+		ClassDB::bind_method(D_METHOD("set_command_stack", "p_stack"), &CommandResource::set_command_stack);
+		ClassDB::bind_method(D_METHOD("get_command_stack" ), &CommandResource::get_command_stack);
+		ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "command_stack", godot::PROPERTY_HINT_ARRAY_TYPE, "Array"), "set_command_stack", "get_command_stack");
+	}
+
 private:
-	TypedArray<Command> command_stack;
+	TypedArray<Ref<Command>> command_stack;
+	int current_command = -1;
+	int command_tip = 0;
 };

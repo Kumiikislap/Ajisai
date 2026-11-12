@@ -12,7 +12,7 @@ class Command : public Resource
 
 public:
 	virtual bool execute() { return false; }
-	virtual void undo() = 0;
+	virtual void undo() {};
 	virtual void bind_director() {};
 protected:
 	static void _bind_methods() {}

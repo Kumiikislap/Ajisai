@@ -29,6 +29,7 @@
 #include <godot_cpp/classes/input_event_action.hpp>
 #include "util/debug.hpp"
 #include "SceneStateEnum.h"
+#include "CommandStack.h"
 
 // when using memnew: always add child in constructor
 SceneMenu::SceneMenu()
@@ -74,6 +75,7 @@ void SceneMenu::init_from_gdscript()
 	
 	auto s = states.get("Normal", nullptr);
 	current_state = cast_to<SceneStates>(s);
+	current_dialogue_box = horizontal_dialogue_box;
 
 	//// for tests
 	//Button* button_state = get_node<Button>("Button");
@@ -124,7 +126,7 @@ void SceneMenu::handle_state()
 			break;
 		case SceneStateEnum::UNSKIPPABLE:
 			break;
-	}             
+	}
 	current_state->enter(*this);
 	pprint(current_state);
 }
@@ -187,21 +189,21 @@ void SceneMenu::start_dialogue()
 	assert(director != nullptr and "director is null!");
 	assert(dialogue_resource != nullptr and "dialogue_resource is null!");
 
-	assert(dialogue_box->has_method("start"));
-	dialogue_box->call("start", dialogue_resource, line, register_apis);
+	assert(current_dialogue_box->has_method("start"));
+	current_dialogue_box->call("start", dialogue_resource, line, register_apis);
 }
 
 void SceneMenu::auto_dialogue()
 {
 // crashes when no dialogue started
-	assert(dialogue_box->has_method("auto_progress"));
-	dialogue_box->call("auto_progress");
+	assert(current_dialogue_box->has_method("auto_progress"));
+	current_dialogue_box->call("auto_progress");
 }
 
 void SceneMenu::fast_forward_dialogue()
 {
-	assert(dialogue_box->has_method("fast_forward"));
-	dialogue_box->call("fast_forward");
+	assert(current_dialogue_box->has_method("fast_forward"));
+	current_dialogue_box->call("fast_forward");
 	UtilityFunctions::print("skipped");
 }
 
@@ -213,15 +215,15 @@ void SceneMenu::set_scene_mode(SceneStateEnum::STATE p_mode)
 void SceneMenu::fast_forward_await()
 {
 	// TODO check if dialogue_script has ended
-	assert(dialogue_box->has_method("fast_forward"));
-	dialogue_box->call("fast_forward");
+	assert(current_dialogue_box->has_method("fast_forward"));
+	current_dialogue_box->call("fast_forward");
 	UtilityFunctions::print("test-ff" );
 	//scene_mode = FAST_FORWARD;
 }
 
 void SceneMenu::set_dialogue_box(CanvasLayer* const p_box)
 {
-	dialogue_box = p_box;
+	horizontal_dialogue_box = p_box;
 }
 
 void SceneMenu::set_vertical_dialogue_box(CanvasLayer* const p_box)
@@ -241,7 +243,7 @@ Ref<Resource> SceneMenu::get_dialogue_resource() const
 
 CanvasLayer* SceneMenu::get_dialogue_box() const 
 {
-	return dialogue_box;
+	return horizontal_dialogue_box;
 };
 
 CanvasLayer* SceneMenu::get_vertical_dialogue_box() const 
@@ -267,4 +269,12 @@ SceneMenu::~SceneMenu()
 		memdelete(stat);
 	}
 	states.clear();
+}
+
+void SceneMenu::show_dialogue_box(DialogueBox p_box)
+{
+}
+
+void SceneMenu::hide_dialogue_box(DialogueBox p_box)
+{
 }

@@ -11,20 +11,21 @@ config_version=5
 [application]
 
 config/name="Ajisai"
+config/version="0.39"
 run/main_scene="uid://d3nkrpqb7dm0g"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-MovieDataTest="*uid://b5jkp27phhola"
 DialogueManager="*uid://c3rodes2l3gxb"
+MovieDataTest="*uid://b5jkp27phhola"
 
 [dialogue_manager]
 
 runtime/balloon_path="res:///balloon.tscn"
 editor/advanced/custom_test_scene_path="uid://ugd552efvil0"
-editor/advanced/extra_auto_complete_script_sources=["uid://b5jkp27phhola", "uid://c3etjqws6i74m"]
+editor/advanced/extra_auto_complete_script_sources=["uid://b5jkp27phhola", "uid://2wugggejfsn", "uid://c3etjqws6i74m"]
 
 [display]
 

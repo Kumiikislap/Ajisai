@@ -1,6 +1,8 @@
 class_name Movie extends RefCounted
 
-var movie
+enum {
+	WHO = 1
+}
 
 var yumi = "mayumi"
 
