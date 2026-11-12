@@ -204,21 +204,22 @@ func _on_balloon_gui_input(event: InputEvent) -> void:
 	var skip_button_was_pressed: bool = event.is_action_pressed(skip_action)
 	
 	# return to normal state when skipping in auto
-	if scene_menu.scene_state is SceneStateAuto:
+	if scene_menu.current_state is SceneStateAuto:
 		if mouse_was_clicked or skip_button_was_pressed: 
 			auto_timer.stop()
 			print("auto-stop")
-			scene_menu.simulate_keys_for_states(SceneMenu.NORMAL)
+			scene_menu.simulate_keys_for_states(SceneStateEnum.NORMAL)
 	
 	# skip dialogue text typing
 	if dialogue_label.is_typing:
 		if mouse_was_clicked or skip_button_was_pressed:
 			#get_viewport().set_input_as_handled()
-			if scene_menu.scene_state is SceneStateAuto:
-				auto_timer.stop()
-				print("auto-stop")
-				scene_menu.simulate_keys_for_states(SceneMenu.NORMAL)
-				dialogue_label.skip_typing()
+			#if scene_menu.current_state is SceneStateAuto and mouse_was_clicked:
+				#auto_timer.stop()
+				#print("auto-stop")
+				#scene_menu.simulate_keys_for_states(SceneStateEnum.NORMAL)
+				#dialogue_label.skip_typing()
+				#return
 			dialogue_label.skip_typing()
 			return
 	
@@ -247,11 +248,6 @@ var auto_timer := Timer.new()
 var is_fast_forward := false
 var auto_delay := 2.0
 
-#func _physics_process(delta: float) -> void:
-
-#func _unhandled_key_input(event: InputEvent) -> void:
-
-
 # called when text is done typing or initiated by auto state
 func auto_progress():
 	print(dialogue_line.text)
@@ -270,7 +266,7 @@ func auto_start_timer():
 	auto_timer.start(auto_delay)
 
 func next_dialogue():
-	if scene_menu.scene_state is SceneStateAuto:
+	if scene_menu.current_state is SceneStateAuto:
 		next(dialogue_line.next_id)
 
 func ball():
@@ -280,6 +276,6 @@ func fast_forward():
 	if dialogue_label.is_typing:
 		dialogue_label.skip_typing()
 	# check if we reached a response dialogue
-	if dialogue_line.responses.size() > 0:
+	if !dialogue_line or dialogue_line.responses.size() > 0:
 		return
 	next(dialogue_line.next_id)

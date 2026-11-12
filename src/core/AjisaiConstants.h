@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-namespace rl::inline constants
+namespace ajisai::inline constants
 {
     namespace name
     {
@@ -75,7 +75,7 @@ namespace rl::inline constants
     {
         namespace scene
         {
-            constexpr inline auto Level1{ "res://scenes/levels/level1.tscn" };
+            constexpr inline auto SceneMenu { "res://features/movie/scene_menu.tscn" };
             constexpr inline auto Player{ "res://scenes/characters/player.tscn" };
             constexpr inline auto Bullet{ "res://scenes/projectiles/bullet.tscn" };
         }
@@ -84,5 +84,6 @@ namespace rl::inline constants
         {
             constexpr inline auto MainDialog{ "res://scenes/ui/main_dialog.tscn" };
         }
+
     }
 }

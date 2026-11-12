@@ -1,7 +1,6 @@
 extends Director
 
 @onready var happy: Sprite2D = $CanvasLayer/Control/Happy
-@onready var dialogue_manager_wrapper: DialogueManagerWrapper = $DialogueManagerWrapper
 var tween : Tween
 var dialogue_node : Balloon
 
@@ -18,10 +17,8 @@ enum MODES {
 
 func _ready() -> void:
 	#dialogue_node = DialogueManager.show_dialogue_balloon(dialogue_resource, "start", [self, { "movie" = MovieData.new() } ])
-	dialogue_manager_wrapper.show_dialogue(dialogue_resource, 'start')
 	#dialogue_box = dialogue_node.get_node("%Balloon")
 	
-	printerr(dialogue_box)
 	init_from_gdscript()
 	
 	tween = create_tween()

@@ -1,18 +1,17 @@
 #include <godot_cpp/classes/resource.hpp>
 #include "features/movie/Actor.h"
-#include "godot_cpp/classes/ref.hpp"
+#include "features/services/TweenAnimations.h"
+#include "godot_cpp/classes/object.hpp"
 #include "godot_cpp/classes/tween.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
 
 
 using namespace godot;
 
-class ActorAnimations : public Resource
+class ActorAnimations : public Object
 {
-	GDCLASS(ActorAnimations, Resource)
+	GDCLASS(ActorAnimations, Object)
 	
-	static void _bind_methods(){};
-
 	public:
 
 	void fade_out(Actor* p_actor, float p_duration = 1.0);
@@ -27,7 +26,9 @@ class ActorAnimations : public Resource
 
 	void animate(Actor* p_actor);
 
+	protected:
+	static void _bind_methods();
 	private:
 	float duration { 1.0 };
-	Ref<Tween> tween;
+	TweenAnimations* tween_animations { nullptr };;
 };

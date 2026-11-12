@@ -1,8 +1,7 @@
 #include <cassert>
-#include <cstddef>
 #include "SceneMenu.h"
+#include "features/movie/CommandStack.h"
 #include "features/movie/Director.h"
-#include "features/movie/SceneStateAuto.h"
 #include "features/movie/SceneStates.h"
 #include "godot_cpp/classes/button.hpp"
 #include "godot_cpp/classes/canvas_layer.hpp"
@@ -10,6 +9,7 @@
 #include "godot_cpp/classes/input.hpp"
 #include "godot_cpp/classes/input_event.hpp"
 #include "godot_cpp/classes/node.hpp"
+#include "godot_cpp/classes/node2d.hpp"
 #include "godot_cpp/classes/ref.hpp"
 #include "godot_cpp/classes/resource.hpp"
 #include "godot_cpp/classes/script.hpp"
@@ -17,6 +17,8 @@
 #include "godot_cpp/core/memory.hpp"
 #include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/callable.hpp"
+#include "godot_cpp/variant/string_name.hpp"
+#include "godot_cpp/variant/variant.hpp"
 #include "util/bind.hpp"
 #include "util/conversions.hpp"
 #include "util/input.hpp"
@@ -24,30 +26,35 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #include <godot_cpp/classes/timer.hpp>
 #include <godot_cpp/variant/callable.hpp>
-#include "SceneStateNormal.h"
 #include <godot_cpp/classes/input_event_action.hpp>
+#include "util/debug.hpp"
+#include "SceneStateEnum.h"
 
+// when using memnew: always add child in constructor
 SceneMenu::SceneMenu()
 {
+	states.set("Normal", memnew(SceneStateNormal));
+	states.set("Auto", memnew(SceneStateAuto));
+	states.set("FastForward", memnew(SceneStateFastForward));
 };
 
 void SceneMenu::_bind_methods()
 {
 	rl::bind_property(SceneMenu, dialogue_resource, Ref<Resource>);
+	rl::bind_member_function(SceneMenu, init_from_gdscript);
 	ClassDB::bind_method(D_METHOD("set_dialogue_box", "p_box" ), &SceneMenu::set_dialogue_box);
 	ClassDB::bind_method(D_METHOD("get_dialogue_box"), &SceneMenu::get_dialogue_box);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "dialogue_box", godot::PROPERTY_HINT_NODE_TYPE, "CanvasLayer"),
+		"set_dialogue_box", "get_dialogue_box");
+	ClassDB::bind_method(D_METHOD("set_vertical_dialogue_box", "p_box" ), &SceneMenu::set_vertical_dialogue_box);
+	ClassDB::bind_method(D_METHOD("get_vertical_dialogue_box"), &SceneMenu::get_vertical_dialogue_box);
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "vertical_dialogue_box", godot::PROPERTY_HINT_NODE_TYPE, "CanvasLayer"),
+		"set_vertical_dialogue_box", "get_vertical_dialogue_box");
+
 	ClassDB::bind_method(D_METHOD("set_scene_mode", "scene_mode"), &SceneMenu::set_scene_mode);
 	ClassDB::bind_method(D_METHOD("set_scene_state", "p_state" ), &SceneMenu::set_scene_state);
 	ClassDB::bind_method(D_METHOD("get_scene_state"), &SceneMenu::get_scene_state);
-	BIND_ENUM_CONSTANT(NORMAL);
-	BIND_ENUM_CONSTANT(AUTO);
-	BIND_ENUM_CONSTANT(FAST_FORWARD);
-	BIND_ENUM_CONSTANT(UNSKIPPABLE);
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "dialogue_box", godot::PROPERTY_HINT_NODE_TYPE, "CanvasLayer"),
-		"set_dialogue_box", "get_dialogue_box");
-	rl::bind_property(SceneMenu, vertical_dialogue_box, CanvasLayer*);
-	rl::bind_member_function(SceneMenu, init_from_gdscript);
-	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "scene_state", godot::PROPERTY_HINT_NODE_TYPE, "SceneStates"),
+	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "current_state", godot::PROPERTY_HINT_NODE_TYPE, "SceneStates"),
 		"set_scene_state", "get_scene_state");
 	ClassDB::bind_method(D_METHOD("simulate_keys_for_states", "go_to_state" ), &SceneMenu::simulate_keys_for_states);
 }
@@ -61,11 +68,22 @@ void SceneMenu::init_from_gdscript()
 {
 	Node* director_node = this->find_child("Director");
 	director = rl::gdcast<Director>(director_node);
+
+	register_apis.append(director);
+	//register_apis.append(cmdstack);
 	
-	scene_state = Ref<SceneStateNormal>(memnew(SceneStateNormal));
-	// for tests
-	Button* button_state = get_node<Button>("Button");
-    button_state->connect("pressed", callable_mp(this, &SceneMenu::simulate_keys_for_states).bind(AUTO));
+	auto s = states.get("Normal", nullptr);
+	current_state = cast_to<SceneStates>(s);
+
+	//// for tests
+	//Button* button_state = get_node<Button>("Button");
+    ////button_state->connect("pressed", callable_mp(this, &SceneMenu::simulate_keys_for_states).bind(SceneStateEnum::AUTO));
+	//pprint("macro yay");
+
+	//// memory leak nyehehehe
+	//cmdstack->api_test();
+	//pprint(cmdstack);
+	pprint(current_state);
 }
 
 void SceneMenu::_process(double delta)
@@ -74,47 +92,67 @@ void SceneMenu::_process(double delta)
 
 void SceneMenu::_physics_process(double delta)
 {
-	scene_state->physics_update(*this, delta);
+	// only fast_forward uses physics process as of now
+	if (current_state->is_class("SceneStateFastForward"))
+	{
+		current_state->physics_update(*this, delta);
+	}
 }
 
 void SceneMenu::handle_state()
 {
-	Ref<SceneStates> state = scene_state->handleInput(*this, input);
-	if (state != NULL)
+//	// TODO state returns the next state name then process that here
+//	// also make them object
+	SceneStateEnum::STATE state  = current_state->handleInput(*this, input);
+	if (state == SceneStateEnum::IGNORE )
 	{
-		//scene_state.unref();
-		scene_state->exit(*this);
-		scene_state = state;
-		scene_state->enter(*this);
+		return;
 	}
-	UtilityFunctions::print(scene_state);
+	current_state->exit(*this);
+	switch (state)
+	{
+		case SceneStateEnum::NORMAL:
+			current_state =  cast_to<SceneStates>(states.get("Normal", nullptr));
+			break;
+		case SceneStateEnum::AUTO:
+			current_state = cast_to<SceneStates>(states.get("Auto", nullptr)) ;;
+			break;
+		case SceneStateEnum::FAST_FORWARD:
+			current_state = cast_to<SceneStates>(states.get("FastForward", nullptr)) ;;
+			break;
+		case SceneStateEnum::IGNORE:
+			break;
+		case SceneStateEnum::UNSKIPPABLE:
+			break;
+	}             
+	current_state->enter(*this);
+	pprint(current_state);
 }
 
-void SceneMenu::simulate_keys_for_states(SCENE_MODE go_to_state)
+void SceneMenu::simulate_keys_for_states(SceneStateEnum::STATE go_to_state)
 {
 	// simulate inputs
 	switch (go_to_state) {
-		case AUTO:
+		case SceneStateEnum::AUTO:
 			input->action_press("auto_hotkey");
 			handle_state();
 			input->action_release("auto_hotkey");
 			break;
-		case FAST_FORWARD:
+		case SceneStateEnum::FAST_FORWARD:
 			break;
-		case NORMAL:
+		case SceneStateEnum::NORMAL:
 			// cant check scene_state class (?) or cant read derived auto class
-			if (scene_state->is_class("SceneStateAuto"))
-			{
-				input->action_press("auto_hotkey");
-				handle_state();
-				input->action_release("auto_hotkey");
-			}
+			// already checked if in auto in gdscript lol
+			//if (current_state->is_class("SceneStateAuto"))
+			//{
+			//	input->action_press("auto_hotkey");
+			//	//handle_state();
+			//	input->action_release("auto_hotkey");
+			//	pprint("henlo");
+			//}
 			input->action_press("auto_hotkey");
-			handle_state();
 			input->action_release("auto_hotkey");
 			UtilityFunctions::print("call from balls");
-			break;
-		case UNSKIPPABLE:
 			break;
 	
 	}
@@ -124,28 +162,33 @@ void SceneMenu::_input(const Ref<InputEvent> &p_event)
 {
 }
 
-void SceneMenu::_unhandled_key_input(const Ref<InputEvent>& event)
+void SceneMenu::_unhandled_input(const Ref<InputEvent>& p_event)
 {
 	handle_state();
+}
+
+void SceneMenu::_unhandled_key_input(const Ref<InputEvent>& event)
+{
 	if (input->is_action_just_pressed("test"))
 	{
 		UtilityFunctions::print("test-pressed" );
 		start_dialogue();
 	}
-	//UtilityFunctions::print("event_test" );
 }
 
+void SceneMenu::_exit_tree()
+{
+	pprint("scene exit");
+}
 
 // add parameters
 void SceneMenu::start_dialogue()
 {
 	assert(director != nullptr and "director is null!");
 	assert(dialogue_resource != nullptr and "dialogue_resource is null!");
-	Array states;
-	states.append(director);
 
 	assert(dialogue_box->has_method("start"));
-	dialogue_box->call("start", dialogue_resource, line, states);
+	dialogue_box->call("start", dialogue_resource, line, register_apis);
 }
 
 void SceneMenu::auto_dialogue()
@@ -162,9 +205,9 @@ void SceneMenu::fast_forward_dialogue()
 	UtilityFunctions::print("skipped");
 }
 
-void SceneMenu::set_scene_mode(SCENE_MODE p_mode)
+void SceneMenu::set_scene_mode(SceneStateEnum::STATE p_mode)
 {
-	scene_mode = p_mode;
+	//scene_mode = p_mode;
 }
 
 void SceneMenu::fast_forward_await()
@@ -176,17 +219,17 @@ void SceneMenu::fast_forward_await()
 	//scene_mode = FAST_FORWARD;
 }
 
-void SceneMenu::set_dialogue_box(CanvasLayer* p_box)
+void SceneMenu::set_dialogue_box(CanvasLayer* const p_box)
 {
 	dialogue_box = p_box;
 }
 
-void SceneMenu::set_vertical_dialogue_box(CanvasLayer* p_box)
+void SceneMenu::set_vertical_dialogue_box(CanvasLayer* const p_box)
 {
 	vertical_dialogue_box = p_box;
 }
 
-void SceneMenu::set_dialogue_resource(Ref<Resource> p_resource)
+void SceneMenu::set_dialogue_resource(const Ref<Resource> p_resource)
 {
 	dialogue_resource = p_resource;
 }
@@ -206,11 +249,22 @@ CanvasLayer* SceneMenu::get_vertical_dialogue_box() const
 	return vertical_dialogue_box;
 };
 
-void SceneMenu::set_scene_state(Ref<SceneStates> p_state)
+void SceneMenu::set_scene_state(SceneStates* const p_state)
 {
-	scene_state = p_state;
+	current_state = p_state;
 }
-Ref<SceneStates> SceneMenu::get_scene_state() const
+SceneStates* SceneMenu::get_scene_state() const
 {
-	return scene_state;
+	return current_state;
+}
+
+SceneMenu::~SceneMenu()
+{
+	Array states_ = states.values();
+	for ( auto state : states_ )
+	{
+		SceneStates* stat = cast_to<SceneStates>(state);
+		memdelete(stat);
+	}
+	states.clear();
 }

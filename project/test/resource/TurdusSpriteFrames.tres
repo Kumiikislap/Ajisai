@@ -8,22 +8,33 @@
 [resource]
 animations = [{
 "frames": [{
+"duration": 4.0,
+"texture": ExtResource("2_24do4")
+}, {
+"duration": 14.0,
+"texture": ExtResource("1_s7758")
+}],
+"loop": 1,
+"name": &"turdus",
+"speed": 24.0
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("1_24do4")
 }],
 "loop": 0,
-"name": &"happy",
+"name": &"turdus_happy",
 "speed": 24.0
 }, {
 "frames": [{
-"duration": 14.0,
-"texture": ExtResource("1_s7758")
-}, {
 "duration": 4.0,
 "texture": ExtResource("2_24do4")
+}, {
+"duration": 14.0,
+"texture": ExtResource("1_s7758")
 }],
 "loop": 1,
-"name": &"idle",
+"name": &"turdus_idle",
 "speed": 24.0
 }, {
 "frames": [{
@@ -31,11 +42,11 @@ animations = [{
 "texture": ExtResource("4_mdylq")
 }],
 "loop": 1,
-"name": &"shocked",
+"name": &"turdus_shocked",
 "speed": 24.0
 }, {
 "frames": [],
 "loop": 2,
-"name": &"smile",
+"name": &"turdus_smile",
 "speed": 24.0
 }]

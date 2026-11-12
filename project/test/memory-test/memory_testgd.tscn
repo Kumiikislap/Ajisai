@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://btkrfl3g4qv7p"]
+
+[ext_resource type="Script" uid="uid://c2cfnesdek1rl" path="res://test/memory-test/memory_testgd.gd" id="1_ky54u"]
+
+[node name="MemoryTestgd" type="Node" unique_id=5605125]
+script = ExtResource("1_ky54u")

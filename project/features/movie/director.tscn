@@ -1,10 +1,6 @@
 [gd_scene format=3 uid="uid://buyvpsealti3c"]
 
-[ext_resource type="CharactersResource" uid="uid://bkdlownuo7uma" path="res://test/movie/characters_resource.tres" id="1_eosvv"]
-[ext_resource type="Resource" uid="uid://cwvn0sdxmtmnp" path="res://resources/test_gdscript_dm.dialogue" id="1_nikod"]
 [ext_resource type="Script" uid="uid://ernxrctfytmw" path="res://features/movie/director.gd" id="3_rppdf"]
 
 [node name="Director" type="Director" unique_id=1882625696]
-cast = ExtResource("1_eosvv")
-dialogue_resource = ExtResource("1_nikod")
 script = ExtResource("3_rppdf")

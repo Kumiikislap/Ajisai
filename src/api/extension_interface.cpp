@@ -5,11 +5,13 @@
 #include <godot_cpp/core/memory.hpp>
 #include <godot_cpp/variant/string_name.hpp>
 
+#include "Ajisai.h"
 #include "api/extension_interface.hpp"
 #include "features/movie/Actor.h"
-#include "features/movie/SceneStateAuto.h"
-#include "features/movie/SceneStateFastForward.h"
-#include "features/movie/SceneStateNormal.h"
+#include "features/movie/Command.h"
+#include "features/movie/CommandResource.h"
+#include "features/movie/CommandStack.h"
+#include "features/movie/Commands.h"
 #include "godot_cpp/classes/packed_scene.hpp"
 #include "godot_cpp/core/class_db.hpp"
 #include "singletons/sglobal.h"
@@ -27,6 +29,8 @@
 #include "features/services/TweenAnimations.h"
 #include "test/main.h"
 #include "features/title/main_menu.h"
+
+#include "test/MemoryTest.h"
 
 namespace rl
 {
@@ -55,21 +59,29 @@ namespace rl
         godot::ClassDB::register_runtime_class<MainMenu>();
         //godot::ClassDB::register_class<SGlobal>();
 
-		godot::ClassDB::register_runtime_class<ActorResource>();
-		godot::ClassDB::register_runtime_class<CharactersResource>();
+		godot::ClassDB::register_class<ActorResource>();
+		godot::ClassDB::register_class<CharactersResource>();
 		godot::ClassDB::register_runtime_class<Director>();
 		godot::ClassDB::register_runtime_class<Actor>();
 		godot::ClassDB::register_runtime_class<ActorsLayer>();
 		godot::ClassDB::register_runtime_class<TweenAnimations>();
 		godot::ClassDB::register_runtime_class<SceneMenu>();
 
-		godot::ClassDB::register_runtime_class<DialogueManagerWrapper>();
+		GDREGISTER_RUNTIME_CLASS(ActorAnimations)
 
 		GDREGISTER_VIRTUAL_CLASS(SceneStates);
 		GDREGISTER_CLASS(SceneStateAuto);
 		GDREGISTER_CLASS(SceneStateFastForward);
 		GDREGISTER_CLASS(SceneStateNormal);
 
+		GDREGISTER_ABSTRACT_CLASS(Command)
+		GDREGISTER_CLASS(CommandStack)
+		GDREGISTER_CLASS(CommandTest)
+		GDREGISTER_CLASS(CommandResource)
+
+		GDREGISTER_RUNTIME_CLASS(Ajisai)
+		GDREGISTER_RUNTIME_CLASS(MemoryTest)
+		GDREGISTER_RUNTIME_CLASS(SceneStateEnum)
 		//godot::ClassDB::register_class<DialogueManagerWrapper>();
 
         initialize_static_objects();

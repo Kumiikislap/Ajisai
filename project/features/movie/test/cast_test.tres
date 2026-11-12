@@ -1,0 +1,8 @@
+[gd_resource type="CharactersResource" format=3 uid="uid://b7ax5woqhnp1q"]
+
+[ext_resource type="PackedScene" uid="uid://sc6v7hmidtb2" path="res://features/movie/test/actorTest.tscn" id="1_36ssq"]
+
+[resource]
+characters = Dictionary[StringName, PackedScene]({
+&"Turdus": ExtResource("1_36ssq")
+})
