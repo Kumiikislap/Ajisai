@@ -4,13 +4,13 @@ using MovieDataTest
 ~ start
 Miao : a
 Nathan: [[Hi|Hello|Howdy]], this is some dialogue. 
-#do api_test()
-do add_actor(Turdus)
+do show_actor(Turdus)
 #do set_actor_position(Turdus, right)
 Nathan: Here are some choices.
 Turdus: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 - bro
 	Miao: skip pls
+do hide_actor(Turdus)
 Turdus: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.
 - First one
 	Nathan: You picked the first one.

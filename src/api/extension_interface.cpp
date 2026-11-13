@@ -84,6 +84,9 @@ namespace rl
 		GDREGISTER_RUNTIME_CLASS(SceneStateEnum)
 		//godot::ClassDB::register_class<DialogueManagerWrapper>();
 
+
+		GDREGISTER_CLASS(CommandActorVisibility)
+		GDREGISTER_CLASS(CommandActorPosition)
         initialize_static_objects();
     }
 

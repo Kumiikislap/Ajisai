@@ -2,6 +2,7 @@
 
 #include "features/movie/Command.h"
 #include "features/movie/Director.h"
+#include "features/movie/SceneMenu.h"
 #include "godot_cpp/classes/wrapped.hpp"
 #include "godot_cpp/variant/string_name.hpp"
 
@@ -31,12 +32,12 @@ class CommandActorVisibility : public Command
 
 public:
 	enum Visibity {
-		VISIBLE,
-		HIDDEN,
-	};
+		SHOW,
+		HIDE,
+	} visibility;
 	CommandActorVisibility() = default;
 	~CommandActorVisibility() = default;
-	virtual void bind_director(Director* p_director, StringName p_actor);
+	virtual void bind_director(Director* p_director, StringName p_actor, Visibity p_visibilty);
 	virtual bool execute() override;
 	virtual void undo() override;
 
@@ -62,4 +63,22 @@ protected:
 	static void _bind_methods(){};
 
 	Director* director;
+};
+
+class CommandDialogueLine: public Command
+{
+	GDCLASS(CommandDialogueLine, Command)
+
+public:
+	CommandDialogueLine() = default;
+	~CommandDialogueLine() = default;
+	void bind_director(SceneMenu* p_scene, String p_id);
+	virtual bool execute() override;
+	virtual void undo() override;
+
+protected:
+	static void _bind_methods(){};
+
+	SceneMenu* scene_menu;
+	String dialogue_id;
 };

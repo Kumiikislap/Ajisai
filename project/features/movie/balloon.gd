@@ -3,6 +3,8 @@ class_name Balloon extends CanvasLayer
 
 @export var scene_menu : SceneMenu
 
+signal emit_dialogue_id(id: StringName)
+
 ## The dialogue resource
 @export var dialogue_resource: DialogueResource
 
@@ -24,7 +26,6 @@ class_name Balloon extends CanvasLayer
 
 ## A sound player for voice lines (if they exist).
 @onready var audio_stream_player: AudioStreamPlayer = %AudioStreamPlayer
-
 
 
 ## Temporary game states
@@ -92,6 +93,7 @@ func _ready() -> void:
 		start()
 	
 	# for auto mode
+	dialogue_label.started_typing.connect(emit_dialogue_line_id)
 	dialogue_label.finished_typing.connect(auto_progress)
 	auto_timer.timeout.connect(next_dialogue)
 	auto_timer.one_shot = true
@@ -279,3 +281,11 @@ func fast_forward():
 	if !dialogue_line or dialogue_line.responses.size() > 0:
 		return
 	next(dialogue_line.next_id)
+
+func emit_dialogue_line_id():
+	#print(dialogue_line.id)
+	emit_dialogue_id.emit(dialogue_line.id)
+	
+func register_api(extra_game_states: Array = []):
+	temporary_game_states = [self] + extra_game_states
+	

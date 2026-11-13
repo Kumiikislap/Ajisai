@@ -81,14 +81,18 @@ void Director::add_actor(StringName p_name)
 // TODO add animation to show and hide
 void Director::show_actor(StringName p_name)
 {
-	assert(actors.has(p_name));
-	cast_to<Actor>(actors.get(p_name, nullptr))->show();
+	StringName name = p_name.to_lower();
+	assert(actors.has(name));
+	Actor* a = cast_to<Actor>(actors.get(name, nullptr));
+	a->show();
 }
 
 void Director::hide_actor(StringName p_name)
 {
-	assert(actors.has(p_name));
-	cast_to<Actor>(actors.get(p_name, nullptr))->hide();
+	StringName name = p_name.to_lower();
+	assert(actors.has(name));
+	Actor* a = cast_to<Actor>(actors.get(name, nullptr));
+	a->hide();
 }
 
 void Director::change_expression(StringName p_name, StringName p_expression, bool p_is_cut , bool p_is_different_pose)

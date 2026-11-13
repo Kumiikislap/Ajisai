@@ -9,8 +9,17 @@ var yumi = "mayumi"
 func hello(string : String):
 	print("from hell")
 
-func change_expression():
+func change_expression(actor: StringName, expression: StringName):
 	pass
 
 func add_actor():
+	pass
+
+func show_actor(actor : StringName):
+	pass
+
+func hide_actor(actor : StringName):
+	pass
+
+func change_actor_position(actor: StringName, pos: Vector2):
 	pass

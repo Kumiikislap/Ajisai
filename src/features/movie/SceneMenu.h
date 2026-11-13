@@ -12,6 +12,7 @@
 #include "godot_cpp/classes/wrapped.hpp"
 #include "godot_cpp/core/binder_common.hpp"
 #include "godot_cpp/variant/array.hpp"
+#include "godot_cpp/variant/string.hpp"
 #include "godot_cpp/variant/string_name.hpp"
 #include "util/input.hpp"
 #include <godot_cpp/classes/timer.hpp>
@@ -48,12 +49,15 @@ public:
 	void _exit_tree() override;
 
 	void init_from_gdscript();
-	void start_dialogue();
 	void set_scene_mode(SceneStateEnum::STATE);
 	void fast_forward_await();
 	void handle_state();
 	void simulate_keys_for_states(SceneStateEnum::STATE go_to_state);
 
+	void start_dialogue();
+	void next_dialogue(String p_id);
+	void register_api();
+	void recieve_dialogue_id(StringName p_id);
 	void auto_dialogue();
 	void fast_forward_dialogue();
 
@@ -82,7 +86,7 @@ private:
 	TypedDictionary<StringName, SceneStates> states;
 
 	Array register_apis;
-	CommandStack* cmdstack = { nullptr };
+	CommandStack* command_stack = { nullptr };
 
 	StringName line { "start" };
 	CanvasLayer* current_dialogue_box { nullptr };

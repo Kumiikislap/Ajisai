@@ -4,7 +4,7 @@ class_name MovieData extends Node
 # doesnt pass the data to functions
 
 # for tests
-var Turdus := &"Turdus"
+var Turdus := &"Turdus".to_lower()
 
 const y_axis := 700
 const left := Vector2(640 , y_axis)

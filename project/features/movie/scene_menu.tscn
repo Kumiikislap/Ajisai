@@ -29,12 +29,8 @@ offset_transform_enabled = true
 
 [node name="Balloon" parent="." unique_id=1652022206 node_paths=PackedStringArray("scene_menu") instance=ExtResource("5_f718d")]
 scene_menu = NodePath("..")
-start_from_title = ""
-auto_start = false
-will_block_other_input = false
 next_action = &"skip_dialogue_line"
 skip_action = &"skip_dialogue_line"
-is_auto = false
 
 [connection signal="gui_input" from="VerticalBalloon/Balloon/ResponsesMenu" to="VerticalBalloon/Balloon/ResponsesMenu" method="_on_gui_input"]
 

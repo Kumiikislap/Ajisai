@@ -14,7 +14,7 @@ script = ExtResource("1_1x7bd")
 [node name="poseA" type="AnimatedSprite2D" parent="." unique_id=1669570077]
 z_as_relative = false
 sprite_frames = ExtResource("2_act2w")
-animation = &"turdus_shocked"
+animation = &"turdus_happy"
 
 [node name="exprA1" type="AnimatedSprite2D" parent="poseA" unique_id=1397433777]
 visible = false

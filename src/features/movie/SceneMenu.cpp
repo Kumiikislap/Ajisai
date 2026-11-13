@@ -17,6 +17,7 @@
 #include "godot_cpp/core/memory.hpp"
 #include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/callable.hpp"
+#include "godot_cpp/variant/callable_method_pointer.hpp"
 #include "godot_cpp/variant/string_name.hpp"
 #include "godot_cpp/variant/variant.hpp"
 #include "util/bind.hpp"
@@ -37,6 +38,8 @@ SceneMenu::SceneMenu()
 	states.set("Normal", memnew(SceneStateNormal));
 	states.set("Auto", memnew(SceneStateAuto));
 	states.set("FastForward", memnew(SceneStateFastForward));
+
+	command_stack = memnew(CommandStack);
 };
 
 void SceneMenu::_bind_methods()
@@ -70,12 +73,16 @@ void SceneMenu::init_from_gdscript()
 	Node* director_node = this->find_child("Director");
 	director = rl::gdcast<Director>(director_node);
 
-	register_apis.append(director);
-	//register_apis.append(cmdstack);
+	register_apis.append(command_stack);
+	register_api();
 	
 	auto s = states.get("Normal", nullptr);
 	current_state = cast_to<SceneStates>(s);
 	current_dialogue_box = horizontal_dialogue_box;
+	assert(current_dialogue_box->has_signal("emit_dialogue_id"));
+	current_dialogue_box->connect("emit_dialogue_id", callable_mp(this, &SceneMenu::recieve_dialogue_id));
+
+	command_stack->bind_directors(this, director);
 
 	//// for tests
 	//Button* button_state = get_node<Button>("Button");
@@ -104,7 +111,6 @@ void SceneMenu::_physics_process(double delta)
 void SceneMenu::handle_state()
 {
 //	// TODO state returns the next state name then process that here
-//	// also make them object
 	SceneStateEnum::STATE state  = current_state->handleInput(*this, input);
 	if (state == SceneStateEnum::IGNORE )
 	{
@@ -156,7 +162,6 @@ void SceneMenu::simulate_keys_for_states(SceneStateEnum::STATE go_to_state)
 			input->action_release("auto_hotkey");
 			UtilityFunctions::print("call from balls");
 			break;
-	
 	}
 }
 
@@ -167,6 +172,14 @@ void SceneMenu::_input(const Ref<InputEvent> &p_event)
 void SceneMenu::_unhandled_input(const Ref<InputEvent>& p_event)
 {
 	handle_state();
+	if ( input->is_mouse_button_pressed(godot::MOUSE_BUTTON_WHEEL_UP))
+	{
+		command_stack->undo_commands();
+	}
+	if ( input->is_mouse_button_pressed(godot::MOUSE_BUTTON_WHEEL_DOWN))
+	{
+		command_stack->redo_commands();
+	}
 }
 
 void SceneMenu::_unhandled_key_input(const Ref<InputEvent>& event)
@@ -193,6 +206,19 @@ void SceneMenu::start_dialogue()
 	current_dialogue_box->call("start", dialogue_resource, line, register_apis);
 }
 
+void SceneMenu::next_dialogue(String p_id)
+{
+	assert(current_dialogue_box->has_method("next"));
+	current_dialogue_box->call("next", p_id);
+}
+
+void SceneMenu::register_api()
+{
+	assert(current_dialogue_box->has_method("register_api"));
+	horizontal_dialogue_box->call("register_api", register_apis);
+	vertical_dialogue_box->call("register_api", register_apis);
+}
+
 void SceneMenu::auto_dialogue()
 {
 // crashes when no dialogue started
@@ -210,6 +236,12 @@ void SceneMenu::fast_forward_dialogue()
 void SceneMenu::set_scene_mode(SceneStateEnum::STATE p_mode)
 {
 	//scene_mode = p_mode;
+}
+
+void SceneMenu::recieve_dialogue_id(StringName p_id)
+{
+	command_stack;
+	pprint(p_id);
 }
 
 void SceneMenu::fast_forward_await()
@@ -269,6 +301,7 @@ SceneMenu::~SceneMenu()
 		memdelete(stat);
 	}
 	states.clear();
+	memdelete(command_stack);
 }
 
 void SceneMenu::show_dialogue_box(DialogueBox p_box)
