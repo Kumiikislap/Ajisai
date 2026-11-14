@@ -6,6 +6,7 @@
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/core/error_macros.hpp"
 #include "godot_cpp/core/memory.hpp"
+#include "godot_cpp/core/print_string.hpp"
 #include "godot_cpp/variant/string_name.hpp"
 #include "godot_cpp/variant/vector2.hpp"
 #include "util/debug.hpp"
@@ -38,12 +39,10 @@ void CommandStack::execute_command(Ref<Command> cmd)
 		ERR_FAIL_MSG("bruh cmd");
 	}
 	// check if we are at the tip and append to array
-	else if (current_command == command_tip -1 ) {
+	else if (current_command == (command_tip -1) ) {
 		command_stack.append(cmd);
 		current_command +=1;
 		command_tip +=1;
-	}
-	else {
 	}
 	pprint(command_stack);
 	pprint(current_command);
@@ -51,14 +50,38 @@ void CommandStack::execute_command(Ref<Command> cmd)
 
 void CommandStack::undo_commands()
 {
-	if ( (current_command < 0) )
+	if ( current_command < 0 )
 	{
+		print_line(current_command);
 		WARN_PRINT("cant undo, already at oldest");
 		return;
 	}
-	Command* cmd =  cast_to<Command>(command_stack[current_command]);
-	cmd->undo();
-	current_command -= 1;
+	while (current_command > 0) 
+	{
+		if ( current_command == 0 )
+		{
+			WARN_PRINT("cant undo, AAAAaalready at oldest");
+			return;
+		}
+		Command* cmd =  cast_to<Command>(command_stack[current_command]);
+		if (cmd->is_class("CommandDialogueLine"))
+		{
+			if ( dialogue_undo_count > 0 )
+			{
+				WARN_PRINT("DL REACH");
+				dialogue_undo_count = 0;
+				cmd->undo();
+				return;
+			}
+			dialogue_undo_count = 1;
+			current_command -= 1;
+			undo_commands();
+			return;
+		}
+		cmd->undo();
+		current_command -= 1;
+		print_line("whiling");
+	}
 
 	pprint("fu:");
 	pprint(current_command);
@@ -71,16 +94,41 @@ void CommandStack::redo_commands()
 		WARN_PRINT("cant redo, already at newest");
 		return;
 	}
-	current_command += 1;
-	Command* cmd =  cast_to<Command>(command_stack[current_command]);
-	cmd->execute();
-
-	pprint("fr:");
-	pprint(current_command);
+	while ( current_command < (command_tip) )
+	{
+		current_command += 1;
+		Command* cmd =  cast_to<Command>(command_stack[current_command]);
+		if (cmd->is_class("CommandDialogueLine"))
+		{
+			cmd->execute();
+			return;
+		}
+		cmd->execute();
+		pprint("fr:");
+		pprint(current_command);
+	}
 }
 
-void CommandStack::record_dialogue_line(String p_id)
+void CommandStack::record_dialogue_line(StringName p_id)
 {
+	if ( current_dialogue_id == p_id)
+	{
+		return;
+	}
+	if ((current_command + 1) < command_tip)
+	{
+		WARN_PRINT("dl isnt saved!");
+		return;
+	}
+	Ref<CommandDialogueLine> cmd = Ref<CommandDialogueLine>(memnew(CommandDialogueLine));
+	cmd->bind_director(scene_menu, p_id);
+	if (current_command == (command_tip -1) ) {
+		command_stack.append(cmd);
+		current_command +=1;
+		command_tip +=1;
+		current_dialogue_id = p_id;
+	}
+	pprint(command_stack);
 }
 
 void CommandStack::show_actor(StringName p_actor)

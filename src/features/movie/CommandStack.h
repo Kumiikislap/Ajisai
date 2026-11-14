@@ -1,11 +1,13 @@
 #pragma once
 
+#include <cstdint>
 #include "features/movie/Command.h"
 #include "features/movie/CommandResource.h"
 #include "godot_cpp/classes/object.hpp"
 #include "godot_cpp/classes/ref.hpp"
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
+#include "godot_cpp/core/defs.hpp"
 #include "godot_cpp/variant/string.hpp"
 #include "godot_cpp/variant/string_name.hpp"
 #include "godot_cpp/variant/typed_array.hpp"
@@ -38,7 +40,7 @@ public:
 	void undo_commands();
 	void redo_commands();
 
-	void record_dialogue_line(String p_id);
+	void record_dialogue_line(StringName p_id);
 	void show_actor(StringName p_actor);
 	void hide_actor(StringName p_actor);
 	void change_actor_position(StringName p_actor, Vector2 pos);
@@ -56,6 +58,10 @@ private:
 	int current_command = -1;
 	int command_tip = 0;
 	int max_command = 0;
+	bool dialogue_undo_count { 0 };
+	bool dialogue_redo_count { 0 };
+
+	StringName current_dialogue_id;
 
 	void pop_above_current_cmd();
 

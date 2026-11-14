@@ -214,7 +214,8 @@ void SceneMenu::next_dialogue(String p_id)
 
 void SceneMenu::register_api()
 {
-	assert(current_dialogue_box->has_method("register_api"));
+	assert(horizontal_dialogue_box->has_method("register_api"));
+	assert(vertical_dialogue_box->has_method("register_api"));
 	horizontal_dialogue_box->call("register_api", register_apis);
 	vertical_dialogue_box->call("register_api", register_apis);
 }
@@ -240,7 +241,7 @@ void SceneMenu::set_scene_mode(SceneStateEnum::STATE p_mode)
 
 void SceneMenu::recieve_dialogue_id(StringName p_id)
 {
-	command_stack;
+	command_stack->record_dialogue_line(p_id);
 	pprint(p_id);
 }
 

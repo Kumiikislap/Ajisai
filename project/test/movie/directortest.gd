@@ -15,9 +15,13 @@ enum MODES {
 @export var current_mode : MODES
 @export var is_fast_forward := false
 
+
+
+
+
 func _ready() -> void:
-	#dialogue_node = DialogueManager.show_dialogue_balloon(dialogue_resource, "start", [self, { "movie" = MovieData.new() } ])
-	#dialogue_box = dialogue_node.get_node("%Balloon")
+	DialogueManager.show_dialogue_balloon(load("your_dialogue_resource.dialogue"), "your_starting_cue")
+	
 	
 	init_from_gdscript()
 	

@@ -85,7 +85,7 @@ void CommandDialogueLine::bind_director(SceneMenu* p_scene, String p_id)
 
 bool CommandDialogueLine::execute()
 {
-	// stores the next line id
+	// stores the redo line id
 	if (scene_menu == nullptr) {
 		ERR_PRINT("SceneMenu nullptr!");
 		return false;
@@ -96,4 +96,5 @@ bool CommandDialogueLine::execute()
 
 void CommandDialogueLine::undo()
 {
+	execute();
 }

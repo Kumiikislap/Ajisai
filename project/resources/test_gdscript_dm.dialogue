@@ -2,7 +2,13 @@ using MovieDataTest
 # needs to be autoloaded to be used in using whatever that is called
 
 ~ start
-Miao : a
+Miao: 0
+Miao : a [do show_actor(Turdus)]
+do hide_actor(Turdus)
+Miao : aaa1
+Miao : aaaaa2
+Miao : aaaaa3
+Miao : aaaaa4
 Nathan: [[Hi|Hello|Howdy]], this is some dialogue. 
 do show_actor(Turdus)
 #do set_actor_position(Turdus, right)
