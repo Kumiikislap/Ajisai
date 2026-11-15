@@ -1,16 +1,18 @@
 using MovieDataTest
 
 ~ start
-do add_actor("Turdus")
-do set_actor_position("Turdus", left)
+do add_actor(Turdus)
+do set_actor_position(Turdus, right)
 Turdus: movie
-Turdus: One
+Turdus: One 
+#do change_expression(Mayumi)
 Turdus: This is some dialogue.  HAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA . [wait] WORDDDDDDDDDDDDDDDDDDSSSSSSSSS MORE
 	MORE WORDSSSSSSSSSSSSSSSSSSSSSSSSS. 
 Turdus: ......	
 Turdus: movie [next=2]
 Turdus: One
 do change_expression("Turdus", "shocked")
+
 #do set_actor_position("Turdus", right)
 #do print_test()
 Turdus: Tweo

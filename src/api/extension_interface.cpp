@@ -5,30 +5,44 @@
 #include <godot_cpp/core/memory.hpp>
 #include <godot_cpp/variant/string_name.hpp>
 
+#include "Ajisai.h"
 #include "api/extension_interface.hpp"
 #include "features/movie/Actor.h"
+#include "features/movie/Command.h"
+#include "features/movie/CommandResource.h"
+#include "features/movie/CommandStack.h"
+#include "features/movie/Commands.h"
+#include "features/movie/SceneStateEnum.h"
+#include "godot_cpp/classes/packed_scene.hpp"
 #include "godot_cpp/core/class_db.hpp"
-#include "main.h"
-#include "main_menu.h"
 #include "singletons/sglobal.h"
 #include "util/engine.hpp"
 
 #include "features/movie/ActorResource.h"
 #include "features/movie/CharactersResource.h"
 #include "features/movie/Director.h"
-#include "services/DialogueManagerWrapper.h"
+#include "features/services/DialogueManagerWrapper.h"
 #include "features/movie/Actor.h"
 #include "features/movie/ActorsLayer.h"
-#include "features/movie/TweenAnimations.h"
+#include "features/services/TweenAnimations.h"
+#include "features/movie/SceneMenu.h"
+#include "features/movie/SceneStates.h"
+#include "features/services/TweenAnimations.h"
+#include "test/main.h"
+#include "features/title/main_menu.h"
+
+#include "test/MemoryTest.h"
 
 namespace rl
 {
     //static inline SGlobal* global_singleton{ nullptr };
+	//static inline DialogueManagerWrapper* dialogue_manager_wrapper { nullptr };
 
     void initialize_static_objects()
     {
         //global_singleton = memnew(SGlobal);
         //rl::engine::get()->register_singleton("SGlobal", SGlobal::get_ins());
+		//Engine::get_singleton()->register_singleton("DialogueManagerWrapper", memnew(DialogueManagerWrapper));
     }
 
     void teardown_static_objects()
@@ -46,15 +60,36 @@ namespace rl
         godot::ClassDB::register_runtime_class<MainMenu>();
         //godot::ClassDB::register_class<SGlobal>();
 
-		godot::ClassDB::register_runtime_class<ActorResource>();
-		godot::ClassDB::register_runtime_class<CharactersResource>();
+		godot::ClassDB::register_class<ActorResource>();
+		godot::ClassDB::register_class<CharactersResource>();
 		godot::ClassDB::register_runtime_class<Director>();
-		godot::ClassDB::register_runtime_class<DialogueManagerWrapper>();
 		godot::ClassDB::register_runtime_class<Actor>();
 		godot::ClassDB::register_runtime_class<ActorsLayer>();
 		godot::ClassDB::register_runtime_class<TweenAnimations>();
+		godot::ClassDB::register_runtime_class<SceneMenu>();
+
+		GDREGISTER_RUNTIME_CLASS(ActorAnimations)
+
+		GDREGISTER_VIRTUAL_CLASS(SceneStates);
+		GDREGISTER_CLASS(SceneStateAuto);
+		GDREGISTER_CLASS(SceneStateFastForward);
+		GDREGISTER_CLASS(SceneStateNormal);
+
+		GDREGISTER_ABSTRACT_CLASS(Command)
+		GDREGISTER_CLASS(CommandStack)
+		GDREGISTER_CLASS(CommandTest)
+		GDREGISTER_CLASS(CommandResource)
+
+		GDREGISTER_RUNTIME_CLASS(Ajisai)
+		GDREGISTER_RUNTIME_CLASS(MemoryTest)
+		GDREGISTER_RUNTIME_CLASS(SceneStateEnum)
+		//godot::ClassDB::register_class<DialogueManagerWrapper>();
 
 
+		GDREGISTER_CLASS(CommandActorVisibility)
+		GDREGISTER_CLASS(CommandActorPosition)
+		GDREGISTER_CLASS(CommandDialogueLine)
+		GDREGISTER_CLASS(CommmandSignalType)
         initialize_static_objects();
     }
 

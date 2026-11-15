@@ -20,6 +20,7 @@ signal response_selected(response: Variant)
 ## Automatically set up focus neighbours when the responses list changes.
 @export var auto_configure_focus: bool = true
 
+## disable or you cant skip dialogue when next line is a response
 ## Automatically focus the first item when showing.
 @export var auto_focus_first_item: bool = true
 
@@ -99,6 +100,9 @@ func configure_focus() -> void:
 
 	if auto_focus_first_item:
 		items[0].grab_focus()
+		
+	#print("from response")
+	#response_showed.emit()
 
 
 #region Internal
@@ -182,3 +186,10 @@ func _on_response_gui_input(event: InputEvent, item: Control, response: Variant)
 
 
 #endregion
+
+
+#func _on_gui_input(event: InputEvent) -> void:
+	#print("gui-rres")
+	##if event.is_action_pressed("skip_dialogue_line"):
+		##print("gui-rres")
+		#

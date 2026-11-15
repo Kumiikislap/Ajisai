@@ -1,17 +1,10 @@
 #pragma once
 
-#include <godot_cpp/classes/node2d.hpp>
-#include "godot_cpp/classes/compressed_texture2d.hpp"
-#include "godot_cpp/classes/ref.hpp"
-#include "godot_cpp/classes/wrapped.hpp"
-#include <godot_cpp/classes/sprite2d.hpp>
-
-#include "ActorResource.h"
-#include "godot_cpp/core/memory.hpp"
-#include "features/movie/ActorResource.h"
+#include "godot_cpp/classes/animated_sprite2d.hpp"
+#include "godot_cpp/classes/node2d.hpp"
 #include "godot_cpp/variant/string_name.hpp"
-#include "godot_cpp/variant/typed_dictionary.hpp"
 #include <godot_cpp/classes/tween.hpp>
+#include <godot_cpp/classes/property_tweener.hpp>
 
 using namespace godot;
 
@@ -24,32 +17,48 @@ class Actor : public Node2D
 	Actor();
 	~Actor() = default;
 
+	enum CurrentPose {
+		POSE_A = 1,
+		POSE_B = 2,
+	} current_pose_enum;
 
-	void bind_resources(const Ref<ActorResource>& p_resource);
+	struct Pose
+	{
+		enum CurrentExpression {
+			EXPR_1,
+			EXPR_2,
+		} current_expression_enum { EXPR_1  };
+		AnimatedSprite2D* pose { nullptr };
+		AnimatedSprite2D* expr1 { nullptr };
+		AnimatedSprite2D* expr2 { nullptr };
+		AnimatedSprite2D* current_expr_ptr { expr1 };
+	};
+
 	virtual void _ready() override;
 
-	void create_actor();
+	void change_pose(StringName p_pose);
 	void change_expression(StringName p_expression, bool p_is_cut, bool p_is_different_pose);
-
+	void skip_animation();
 	void on_tween_finished(int p_index);
 
 	void set_name(const StringName p_name);
-	StringName get_name()const;
-	Ref<ActorResource> get_actor_data() const;
+	void set_fade_speed(const double p_speed);
+
+	StringName get_name() const;
+	double get_fade_speed() const;
 	
 	private:
 	static void _bind_methods();
 
-	Ref<ActorResource> actor_data { nullptr } ;
+	Pose poseA;
+	Pose poseB;
+	Pose current_pose_struct;
+
 	StringName name;
-	double fade_speed { 0.5 };
+	double fade_speed { 0.5 }; 
 
 	Ref<Tween> tween;
-	//double tween_speed_scale { 1.0 }; for local tween speed
-	//TypedDictionary<StringName, CompressedTexture2D> actor_expression = { };
+	Ref<Tween> tween_next;
 
-	Sprite2D* sprite_01 {memnew(Sprite2D)};
-	Sprite2D* sprite_02 {memnew(Sprite2D)};
-
-
+	
 };

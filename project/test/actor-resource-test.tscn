@@ -1,0 +1,62 @@
+[gd_scene format=3 uid="uid://8c48avmagc6m"]
+
+[ext_resource type="SpriteFrames" uid="uid://q83omn7sqdgw" path="res://test/resource/TurdusSpriteFrames.tres" id="1_iwbam"]
+[ext_resource type="Animation" uid="uid://hbyk5o1ui3o5" path="res://test/resource/new_animation.res" id="2_gdkfi"]
+
+[sub_resource type="Animation" id="Animation_gipbi"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("pose:sprite_frames")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("1_iwbam")]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yy8y3"]
+_data = {
+&"RESET": SubResource("Animation_gipbi"),
+&"new_animation": ExtResource("2_gdkfi")
+}
+
+[node name="actor" type="Node2D" unique_id=1937319911]
+
+[node name="pose" type="AnimatedSprite2D" parent="." unique_id=464237447]
+position = Vector2(679, 649)
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="expr" type="AnimatedSprite2D" parent="pose" unique_id=432123794]
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="expr-ni" type="AnimatedSprite2D" parent="pose" unique_id=1896742485]
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="pose-ni" type="AnimatedSprite2D" parent="." unique_id=1342994011]
+position = Vector2(679, 649)
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="expr" type="AnimatedSprite2D" parent="pose-ni" unique_id=956168618]
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="expr-ni" type="AnimatedSprite2D" parent="pose-ni" unique_id=691525863]
+sprite_frames = ExtResource("1_iwbam")
+animation = &"happy"
+autoplay = "idle"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1358925195]
+libraries/ = SubResource("AnimationLibrary_yy8y3")

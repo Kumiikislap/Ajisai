@@ -32,9 +32,6 @@ signal bridge_get_line_completed(call_index: int, line: DialogueLine)
 ## Used internally
 signal bridge_mutated(call_index: int)
 
-## Kums
-signal manually_waited()
-
 
 ## The list of globals that dialogue can query
 var game_states: Array = []
@@ -601,6 +598,23 @@ func create_resource_from_text(text: String) -> Resource:
 #region Balloon helpers
 
 
+## Set the default balloon to use at runtime.
+func set_default_balloon(balloon_scene: Variant) -> Error:
+	var balloon_scene_path: String = ""
+
+	if balloon_scene is String:
+		balloon_scene_path = balloon_scene
+	elif balloon_scene is PackedScene:
+		balloon_scene_path = balloon_scene.resource_path
+
+	if not ["tscn", "scn"].has(balloon_scene_path.get_extension()):
+		return ERR_INVALID_DATA
+
+	ProjectSettings.set_setting(DMSettings.BALLOON_PATH, balloon_scene_path)
+
+	return OK
+
+
 ## Show the example balloon
 func show_example_dialogue_balloon(resource: DialogueResource, cue: String = "", extra_game_states: Array = []) -> CanvasLayer:
 	var balloon: Node = load(_get_example_balloon_path()).instantiate()
@@ -743,11 +757,16 @@ func translate(data: Dictionary) -> String:
 		return data.text
 
 	var static_id: String = data.get(&"static_id", data.text)
-
-	if static_id == "" or static_id == data.text:
-		return tr(data.text, "dialogue")
+	if DMSettings.get_setting(DMSettings.USE_STATIC_IDS_AS_TRANSLATION_KEYS, true):
+		if static_id.is_empty() or static_id == data.text:
+			return tr(data.text, "dialogue")
+		else:
+			return tr(static_id, "dialogue")
 	else:
-		return tr(static_id)
+		if static_id.is_empty() or static_id == data.text:
+			return tr(data.text)
+		else:
+			return tr(data.text, static_id)
 
 
 # Create a line of dialogue
@@ -847,16 +866,18 @@ func _send_state_to_debugger() -> void:
 
 	var serialised_context: Dictionary = {}
 	for key: String in _registered_contexts.keys():
-		serialised_context[key] = _get_serialised_state_node(
-			key,
-			_registered_contexts.get(key)
-		)
+		if is_instance_valid(_registered_contexts.get(key)):
+			serialised_context[key] = _get_serialised_state_node(
+				key,
+				_registered_contexts.get(key)
+			)
 	var serialised_autoloads: Dictionary = {}
 	for key: String in _autoloads.keys():
-		serialised_autoloads[key] = _get_serialised_state_node(
-			key,
-			_autoloads.get(key)
-		)
+		if is_instance_valid(_autoloads.get(key)):
+			serialised_autoloads[key] = _get_serialised_state_node(
+				key,
+				_autoloads.get(key)
+			)
 	EngineDebugger.send_message("dm:state", [serialised_context, serialised_autoloads])
 
 
@@ -994,16 +1015,10 @@ func _mutate(mutation: Dictionary, extra_game_states: Array, is_inline_mutation:
 			&"wait", &"Wait":
 				mutated.emit(mutation.merged({ is_inline = is_inline_mutation }))
 				if [TYPE_FLOAT, TYPE_INT].has(typeof(args[0])):
-					manually_waited.emit()
-					printerr("U CAN WAIT?? WITH FLAOATS")
 					await Engine.get_main_loop().create_timer(float(args[0])).timeout
-				
 				else:
 					var actions: PackedStringArray = PackedStringArray(args[0] if typeof(args[0]) == TYPE_ARRAY else [args[0]])
-					printerr("U CAN WAIT??")
-					manually_waited.emit()
-					#await _wait_for(actions)
-					
+					await _wait_for(actions)
 				return
 
 			&"debug", &"Debug":

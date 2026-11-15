@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://d3nkrpqb7dm0g"]
+
+[ext_resource type="CharactersResource" uid="uid://b7ax5woqhnp1q" path="res://features/movie/test/cast_test.tres" id="1_yb0fl"]
+
+[node name="Ajisai" type="Ajisai" unique_id=1813304015]
+cast = ExtResource("1_yb0fl")

@@ -7,6 +7,7 @@
 #include <utility>
 
 #include <godot_cpp/core/error_macros.hpp>
+#include "godot_cpp/variant/utility_functions.hpp"
 
 namespace rl::inline utils
 {
@@ -51,4 +52,12 @@ namespace rl::inline utils
             return false;
         }
     }
+}
+;
+//
+//#define bind_member_function(class_name, func_name) method<&class_name::func_name>::bind(#func_name)
+#define pprint(value) UtilityFunctions::print(value)
+
+namespace ajisai
+{
 }

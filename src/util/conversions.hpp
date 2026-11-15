@@ -43,7 +43,8 @@ namespace rl::inline utils
         requires std::derived_from<std::remove_cvref_t<TIn>, godot::Object>
     constexpr inline TOut* gdcast(TIn* obj)
     {
-        runtime_assert(obj != nullptr);
+        //runtime_assert(obj != nullptr);
+		assert(obj != nullptr and "object is null!");
         auto ret{ godot::Object::cast_to<TOut>(obj) };
         runtime_assert(ret != nullptr);
         return ret;
