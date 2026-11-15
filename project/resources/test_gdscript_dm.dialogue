@@ -2,7 +2,7 @@ using MovieDataTest
 # needs to be autoloaded to be used in using whatever that is called
 
 ~ start
-Miao: 0
+do show_actor(Turdus)
 Miao : a [do show_actor(Turdus)]
 do hide_actor(Turdus)
 Miao : aaa1

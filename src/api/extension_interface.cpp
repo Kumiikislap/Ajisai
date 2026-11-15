@@ -12,6 +12,7 @@
 #include "features/movie/CommandResource.h"
 #include "features/movie/CommandStack.h"
 #include "features/movie/Commands.h"
+#include "features/movie/SceneStateEnum.h"
 #include "godot_cpp/classes/packed_scene.hpp"
 #include "godot_cpp/core/class_db.hpp"
 #include "singletons/sglobal.h"
@@ -88,6 +89,7 @@ namespace rl
 		GDREGISTER_CLASS(CommandActorVisibility)
 		GDREGISTER_CLASS(CommandActorPosition)
 		GDREGISTER_CLASS(CommandDialogueLine)
+		GDREGISTER_CLASS(CommmandSignalType)
         initialize_static_objects();
     }
 

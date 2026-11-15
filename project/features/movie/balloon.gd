@@ -3,6 +3,7 @@ class_name Balloon extends CanvasLayer
 
 @export var scene_menu : SceneMenu
 
+## recieved by SceneMenu in GDE
 signal emit_dialogue_id(id: StringName)
 
 ## The dialogue resource
@@ -131,6 +132,8 @@ func start(with_dialogue_resource: DialogueResource = null, title: String = "", 
 		start_from_title = title
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(start_from_title, temporary_game_states)
 	show()
+	
+	emit_dialogue_id.emit(start_from_title)
 
 
 ## Apply any changes to the balloon given a new [DialogueLine].
@@ -182,7 +185,13 @@ func apply_dialogue_line() -> void:
 ## Go to the next line
 func next(next_id: String) -> void:
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
+	emit_dialogue_id.emit(dialogue_line.id)
 
+func next_from_gde(next_id: String) -> void:
+	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
+	# skip dialogue text typing
+	if dialogue_label.is_typing:
+			dialogue_label.skip_typing()
 
 #region Signals
 
@@ -215,13 +224,6 @@ func _on_balloon_gui_input(event: InputEvent) -> void:
 	# skip dialogue text typing
 	if dialogue_label.is_typing:
 		if mouse_was_clicked or skip_button_was_pressed:
-			#get_viewport().set_input_as_handled()
-			#if scene_menu.current_state is SceneStateAuto and mouse_was_clicked:
-				#auto_timer.stop()
-				#print("auto-stop")
-				#scene_menu.simulate_keys_for_states(SceneStateEnum.NORMAL)
-				#dialogue_label.skip_typing()
-				#return
 			dialogue_label.skip_typing()
 			return
 	
@@ -242,6 +244,7 @@ func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 
 #endregion
 
+
 # TODO send response text to history log menu
 
 @export var is_auto := false
@@ -249,6 +252,8 @@ var auto_timer := Timer.new()
 
 var is_fast_forward := false
 var auto_delay := 2.0
+
+var advance_dialogue_type : CommmandSignalType.FromWhat = CommmandSignalType.FROM_GUI
 
 # called when text is done typing or initiated by auto state
 func auto_progress():
@@ -282,9 +287,11 @@ func fast_forward():
 		return
 	next(dialogue_line.next_id)
 
-func emit_dialogue_line_id():
-	#print(dialogue_line.id)
-	emit_dialogue_id.emit(dialogue_line.id)
+func emit_dialogue_line_id(): 
+	pass
+	
+func advance_dialogue(id: String):
+	next_from_gde(id)
 	
 func register_api(extra_game_states: Array = []):
 	temporary_game_states = [self] + extra_game_states

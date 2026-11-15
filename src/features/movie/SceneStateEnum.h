@@ -27,3 +27,21 @@ public:
 	}
 };
 VARIANT_ENUM_CAST(SceneStateEnum::STATE);
+
+class CommmandSignalType: public RefCounted
+{
+	GDCLASS(CommmandSignalType, RefCounted)
+
+public:
+	enum FromWhat{
+		UNDO,
+		REDO,
+		FROM_GUI,
+	};
+	static void _bind_methods(){
+		BIND_ENUM_CONSTANT(UNDO);
+		BIND_ENUM_CONSTANT(REDO);
+		BIND_ENUM_CONSTANT(FROM_GUI);
+	}
+};
+VARIANT_ENUM_CAST(CommmandSignalType::FromWhat);

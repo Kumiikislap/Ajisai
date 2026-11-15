@@ -78,6 +78,7 @@ public:
 protected:
 	static void _bind_methods();
 
+
 private:
 	Input* input = rl::input::get();
 	//SceneStateEnum::STATE scene_mode { SceneStateEnum::STATE::NORMAL };
@@ -93,5 +94,6 @@ private:
 	CanvasLayer* horizontal_dialogue_box { nullptr };
 	CanvasLayer* vertical_dialogue_box { nullptr };
 	Ref<Resource> dialogue_resource { nullptr };
+
 };
 //VARIANT_ENUM_CAST(SceneMenu::SceneStateEnum::STATE);

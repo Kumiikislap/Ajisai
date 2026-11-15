@@ -15,6 +15,7 @@
 #include "godot_cpp/classes/script.hpp"
 #include "godot_cpp/core/class_db.hpp"
 #include "godot_cpp/core/memory.hpp"
+#include "godot_cpp/core/print_string.hpp"
 #include "godot_cpp/variant/array.hpp"
 #include "godot_cpp/variant/callable.hpp"
 #include "godot_cpp/variant/callable_method_pointer.hpp"
@@ -206,10 +207,17 @@ void SceneMenu::start_dialogue()
 	current_dialogue_box->call("start", dialogue_resource, line, register_apis);
 }
 
+// called by undo and redo
 void SceneMenu::next_dialogue(String p_id)
 {
-	assert(current_dialogue_box->has_method("next"));
-	current_dialogue_box->call("next", p_id);
+	assert(current_dialogue_box->has_method("advance_dialogue"));
+	current_dialogue_box->call("advance_dialogue", p_id);
+}
+
+void SceneMenu::recieve_dialogue_id(StringName p_id)
+{
+	pprint(p_id);
+	command_stack->record_dialogue_line(p_id);
 }
 
 void SceneMenu::register_api()
@@ -237,12 +245,6 @@ void SceneMenu::fast_forward_dialogue()
 void SceneMenu::set_scene_mode(SceneStateEnum::STATE p_mode)
 {
 	//scene_mode = p_mode;
-}
-
-void SceneMenu::recieve_dialogue_id(StringName p_id)
-{
-	command_stack->record_dialogue_line(p_id);
-	pprint(p_id);
 }
 
 void SceneMenu::fast_forward_await()

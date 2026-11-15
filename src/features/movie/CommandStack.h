@@ -47,8 +47,14 @@ public:
 	void change_pose(StringName p_actor, StringName p_pose);
 	void change_expression(StringName p_actor, StringName p_expression, bool p_is_cut = false);
 
+	void set_command_idx(int p_idx);
+	int get_command_idx();
+
 protected:
 	static void _bind_methods();
+
+public:
+	bool is_from_undo_redo { false };
 
 private:
 	// TODO load saved command array
