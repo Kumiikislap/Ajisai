@@ -6,10 +6,10 @@ using MovieDataTest
 Miao : a [do show_actor(Turdus)]
 Miao : aaa1
 do hide_actor(Turdus)
-do hide_actor(Turdus)
+#do hide_actor(Turdus)
 Miao : aaaaa2
 Miao : aaaaa3
-do hide_actor(Turdus)
+#do hide_actor(Turdus)
 Miao : aaaaa4
 Nathan: [[Hi|Hello|Howdy]], this is some dialogue. 
 do show_actor(Turdus)

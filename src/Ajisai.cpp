@@ -38,6 +38,30 @@ void Ajisai::_ready()
 	pprint(cast);
 	bind_services();
 
+	int cmd_idx = 0;
+	int cmd_tip = 9;
+
+	for (cmd_idx; cmd_idx < 9; )
+	{
+		print_line(cmd_idx);
+		if (cmd_idx == 5)
+			break;
+		cmd_idx ++;
+
+	}
+
+	for (cmd_idx; cmd_idx >= 0; cmd_idx --)
+	{
+		if (cmd_idx == 5)
+			continue;
+		print_line(cmd_idx);
+	}
+	for (cmd_idx; cmd_idx >= 0; cmd_idx --)
+	{
+		if (cmd_idx == 5)
+			continue;
+		print_line(cmd_idx);
+	}
 }
 
 void Ajisai::_notification(int notification)
@@ -90,5 +114,4 @@ void Ajisai::_bind_methods()
 
 Ajisai::~Ajisai()
 {
-	print_line("aj gone");
 }

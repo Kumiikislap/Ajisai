@@ -54,7 +54,9 @@ protected:
 	static void _bind_methods();
 
 public:
-
+	int cmd_idx = 0;
+	int cmd_tip = 9;
+	bool ignore_next_dialogue_line = false;
 private:
 	// TODO load saved command array
 	Ref<CommandResource> command_resource_stack;

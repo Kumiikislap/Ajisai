@@ -47,91 +47,70 @@ void CommandStack::execute_command(Ref<Command> cmd)
 	if (not cmd->is_class("CommandDialogueLine") and (current_command == (command_tip -1)))
 	{
 		print_line("at tip exe");
-		dont_stop_at_next_dialogue_line = true;
+		ignore_next_dialogue_line = true;
 	}
 	else
 	{
-		dont_stop_at_next_dialogue_line = false;
+		ignore_next_dialogue_line = false;
 	}
 	pprint(command_stack);
 }
 
 // this code is running on my hopes and prayers
+// 1 stop at dialogue command
 void CommandStack::undo_commands()
 {
-	print_line(vformat("command_pos: %s ", current_command));
-	if ( current_command < 0 )
+	print_line(vformat("command_idx: %s ", cmd_idx));
+	if ( current_command <= 0 )
 	{
 		WARN_PRINT("cant undo, already at oldest");
 		return;
 	}
-	// check if we're at tail
-	if ( current_command == 0)
-	{
-	}
 
-	for ( current_command > 1; current_command --; )
+	for ( int i = current_command; current_command > 0; i --)
 	{
-		//if (current_command < 0)
-		//{
-		//	print_line(vformat("return: %s ", current_command));
-		//	return;
-		//}
-		Command* cmd =  cast_to<Command>(command_stack[current_command]);
-		if (cmd->is_class("CommandDialogueLine") and dont_stop_at_next_dialogue_line)
-		{
-			dont_stop_at_next_dialogue_line = false;
-			undo_commands();
+		print_line(vformat("current cmd tip %s",command_tip));
+		print_line(vformat("command_pos: %s ", current_command));
+		if ( i == -1){
 			return;
+		}
+		current_command --;
+		Command* cmd =  cast_to<Command>(command_stack[current_command]);
+		if (cmd->is_class("CommandDialogueLine") and !ignore_next_dialogue_line)
+		{
+			cmd->undo();
+			break;
+		}
+		else {
+			ignore_next_dialogue_line = false;
+			continue;
 		}
 		cmd->undo();
-		if (cmd->is_class("CommandDialogueLine"))
-		{
-			return;
-		}
 	}
+	print_line(vformat("command_idx: %s ", cmd_idx));
 	print_line(vformat("command_pos: %s ", current_command));
 }
 
 void CommandStack::redo_commands(bool is_input_from_balloon)
 {
-	print_line(vformat("command_pos: %s ", current_command));
-	print_line(vformat("stack size : %s ", command_stack.size()));
-	if ( (current_command + 1) >= command_stack.size())
+	if ( (current_command + 1) >= command_tip)
 	{
 		WARN_PRINT("cant redo, already at newest");
 		return;
 	}
-	for ( current_command < command_stack.size(); current_command++;)
+	for(int i = current_command; current_command < command_tip; i++)
 	{
-		print_line(vformat("command_pos: %s ", current_command));
-		print_line(vformat("stack size : %s ", command_stack.size()));
+		current_command ++;
 		Command* cmd =  cast_to<Command>(command_stack[current_command]);
-		if (not cmd->is_class("CommandDialogueLine") and (current_command + 1) == command_stack.size())
-		{
-			print_line("at tip");
-			dont_stop_at_next_dialogue_line = true;
-		}
-		//if ((current_command) >= command_stack.size())
-		//{
-		//	return;
-		//}
-
-		if (cmd->is_class("CommandDialogueLine") and !dont_stop_at_next_dialogue_line)
+		if (cmd->is_class("CommandDialogueLine"))
 		{
 			CommandDialogueLine* cmd_dia = cast_to<CommandDialogueLine>(cmd);
 			cmd_dia->execute(is_input_from_balloon);
-			return;
+			break;
 		}
-		else if (not cmd->is_class("CommandDialogueLine"))
-		{
-			cmd->execute();
-		}
-
-		if ((current_command + 1 ) >= command_stack.size())
-		{
-			return;
-		}
+		cmd->execute();
+		if ((current_command +1) >= command_tip)
+			break;
 	}
 }
 
@@ -141,8 +120,6 @@ void CommandStack::record_dialogue_line(StringName p_id)
 	{
 		return;
 	}
-	print_line(vformat("current cmd %s",current_command));
-	print_line(vformat("current cmd tip %s",command_tip));
 	Ref<CommandDialogueLine> cmd = Ref<CommandDialogueLine>(memnew(CommandDialogueLine));
 	cmd->bind_director(scene_menu, p_id);
 	if (current_command == (command_tip -1 ) ) {
@@ -150,6 +127,9 @@ void CommandStack::record_dialogue_line(StringName p_id)
 		current_command +=1;
 		command_tip +=1;
 		current_dialogue_id = p_id;
+		pprint(command_stack);
+		print_line(vformat("current cmd %s",current_command));
+		print_line(vformat("current cmd tip %s",command_tip));
 		return;
 	}
 	// update current_command when clicking to balloon
