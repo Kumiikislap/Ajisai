@@ -208,10 +208,10 @@ void SceneMenu::start_dialogue()
 }
 
 // called by undo and redo
-void SceneMenu::next_dialogue(String p_id)
+void SceneMenu::next_dialogue(String p_id, bool is_input_from_balloon)
 {
 	assert(current_dialogue_box->has_method("advance_dialogue"));
-	current_dialogue_box->call("advance_dialogue", p_id);
+	current_dialogue_box->call("advance_dialogue", p_id, is_input_from_balloon);
 }
 
 void SceneMenu::recieve_dialogue_id(StringName p_id)

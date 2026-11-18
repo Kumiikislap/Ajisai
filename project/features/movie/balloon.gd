@@ -3,7 +3,8 @@ class_name Balloon extends CanvasLayer
 
 @export var scene_menu : SceneMenu
 
-## recieved by SceneMenu in GDE
+
+## Recieved by SceneMenu in GDE
 signal emit_dialogue_id(id: StringName)
 
 ## The dialogue resource
@@ -94,7 +95,6 @@ func _ready() -> void:
 		start()
 	
 	# for auto mode
-	dialogue_label.started_typing.connect(emit_dialogue_line_id)
 	dialogue_label.finished_typing.connect(auto_progress)
 	auto_timer.timeout.connect(next_dialogue)
 	auto_timer.one_shot = true
@@ -107,10 +107,43 @@ func _process(_delta: float) -> void:
 	if is_instance_valid(dialogue_line):
 		progress.visible = not dialogue_label.is_typing and dialogue_line.responses.size() == 0 and not dialogue_line.has_tag("voice")
 
-func _unhandled_input(_event: InputEvent) -> void:
-	# Only the balloon is allowed to handle input while it's showing
-	if will_block_other_input:
-		get_viewport().set_input_as_handled()
+#func _unhandled_input(_event: InputEvent) -> void:
+	## Only the balloon is allowed to handle input while it's showing
+	#if will_block_other_input:
+		#get_viewport().set_input_as_handled()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	# See if we need to skip typing of the dialogue
+	var mouse_was_clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
+	var skip_button_was_pressed: bool = Input.is_action_just_pressed(next_action)
+	
+	if skip_button_was_pressed:
+		print(skip_button_was_pressed)
+	# return to normal state when skipping in auto
+	if scene_menu.current_state is SceneStateAuto:
+		if mouse_was_clicked or skip_button_was_pressed: 
+			auto_timer.stop()
+			print("auto-stop")
+			scene_menu.simulate_keys_for_states(SceneStateEnum.NORMAL)
+	
+	# skip dialogue text typing
+	if dialogue_label.is_typing:
+		if mouse_was_clicked or skip_button_was_pressed:
+			dialogue_label.skip_typing()
+			return
+		
+	if not is_waiting_for_input: return
+	if dialogue_line.responses.size() > 0: return
+
+	# When there are no response options the balloon itself is the clickable thing
+	#get_viewport().set_input_as_handled()
+
+	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+		next(dialogue_line.next_id)
+	elif event.is_action_pressed(next_action) and get_viewport().gui_get_focus_owner() == balloon:
+		next(dialogue_line.next_id)
+
 
 func _notification(what: int) -> void:
 	## Detect a change of locale and update the current dialogue line to show the new language
@@ -187,12 +220,6 @@ func next(next_id: String) -> void:
 	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
 	emit_dialogue_id.emit(dialogue_line.id)
 
-func next_from_gde(next_id: String) -> void:
-	dialogue_line = await dialogue_resource.get_next_dialogue_line(next_id, temporary_game_states)
-	# skip dialogue text typing
-	if dialogue_label.is_typing:
-			dialogue_label.skip_typing()
-
 #region Signals
 
 
@@ -209,38 +236,41 @@ func _on_mutated(mutation: Dictionary) -> void:
 		mutation_cooldown.start(0.1)
 
 
-func _on_balloon_gui_input(event: InputEvent) -> void:
-	# See if we need to skip typing of the dialogue
-	var mouse_was_clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
-	var skip_button_was_pressed: bool = event.is_action_pressed(skip_action)
-	
-	# return to normal state when skipping in auto
-	if scene_menu.current_state is SceneStateAuto:
-		if mouse_was_clicked or skip_button_was_pressed: 
-			auto_timer.stop()
-			print("auto-stop")
-			scene_menu.simulate_keys_for_states(SceneStateEnum.NORMAL)
-	
-	# skip dialogue text typing
-	if dialogue_label.is_typing:
-		if mouse_was_clicked or skip_button_was_pressed:
-			dialogue_label.skip_typing()
-			return
-	
-	if not is_waiting_for_input: return
-	if dialogue_line.responses.size() > 0: return
 
-	# When there are no response options the balloon itself is the clickable thing
-	#get_viewport().set_input_as_handled()
-
-	if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
-		next(dialogue_line.next_id)
-	elif event.is_action_pressed(next_action) and get_viewport().gui_get_focus_owner() == balloon:
-		next(dialogue_line.next_id)
+## moved gui_input contes to unhandled_input
+#func _on_balloon_gui_input(_event: InputEvent) -> void: 
+	## See if we need to skip typing of the dialogue
+	#var mouse_was_clicked: bool = event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed()
+	#var skip_button_was_pressed: bool = event.is_action_pressed(skip_action)
+	#
+	## return to normal state when skipping in auto
+	#if scene_menu.current_state is SceneStateAuto:
+		#if mouse_was_clicked or skip_button_was_pressed: 
+			#auto_timer.stop()
+			#print("auto-stop")
+			#scene_menu.simulate_keys_for_states(SceneStateEnum.NORMAL)
+	#
+	## skip dialogue text typing
+	#if dialogue_label.is_typing:
+		#if mouse_was_clicked or skip_button_was_pressed:
+			#dialogue_label.skip_typing()
+			#return
+	#
+	#if not is_waiting_for_input: return
+	#if dialogue_line.responses.size() > 0: return
+#
+	## When there are no response options the balloon itself is the clickable thing
+	##get_viewport().set_input_as_handled()
+#
+	#if event is InputEventMouseButton and event.is_pressed() and event.button_index == MOUSE_BUTTON_LEFT:
+		#next(dialogue_line.next_id)
+	#elif event.is_action_pressed(next_action) and get_viewport().gui_get_focus_owner() == balloon:
+		#next(dialogue_line.next_id)
 
 
 func _on_responses_menu_response_selected(response: DialogueResponse) -> void:
 	next(response.next_id)
+	# record response.text here
 
 #endregion
 
@@ -253,10 +283,8 @@ var auto_timer := Timer.new()
 var is_fast_forward := false
 var auto_delay := 2.0
 
-var advance_dialogue_type : CommmandSignalType.FromWhat = CommmandSignalType.FROM_GUI
-
 # called when text is done typing or initiated by auto state
-func auto_progress():
+func auto_progress() -> void:
 	print(dialogue_line.text)
 	
 	# check if we reached a response dialogue and grab focus
@@ -268,18 +296,22 @@ func auto_progress():
 	if dialogue_label.is_finished():
 		auto_timer.start(auto_delay)
 
+
 # auto delay before proceeding to next line
-func auto_start_timer():
+func auto_start_timer() -> void:
 	auto_timer.start(auto_delay)
 
-func next_dialogue():
+
+func next_dialogue() -> void:
 	if scene_menu.current_state is SceneStateAuto:
 		next(dialogue_line.next_id)
 
-func ball():
+
+func ball() -> void:
 	print("print")
 
-func fast_forward():
+
+func fast_forward() -> void:
 	if dialogue_label.is_typing:
 		dialogue_label.skip_typing()
 	# check if we reached a response dialogue
@@ -287,12 +319,17 @@ func fast_forward():
 		return
 	next(dialogue_line.next_id)
 
-func emit_dialogue_line_id(): 
-	pass
-	
-func advance_dialogue(id: String):
-	next_from_gde(id)
-	
-func register_api(extra_game_states: Array = []):
+
+## called from GDE
+func advance_dialogue(id: String, is_input_from_balloon: bool) -> void:
+	dialogue_line = await dialogue_resource.get_next_dialogue_line(id, temporary_game_states)
+	if (is_input_from_balloon):
+		return
+	# skip dialogue text typing
+	if dialogue_label.is_typing:
+			dialogue_label.skip_typing()
+
+
+func register_api(extra_game_states: Array = []) -> void:
 	temporary_game_states = [self] + extra_game_states
 	

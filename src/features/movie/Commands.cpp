@@ -83,14 +83,14 @@ void CommandDialogueLine::bind_director(SceneMenu* p_scene, String p_id)
 	dialogue_id = p_id;
 }
 
-bool CommandDialogueLine::execute()
+bool CommandDialogueLine::execute(bool is_input_from_balloon)
 {
 	// stores the redo line id
 	if (scene_menu == nullptr) {
 		ERR_PRINT("SceneMenu nullptr!");
 		return false;
 	}
-	scene_menu->next_dialogue(dialogue_id);
+	scene_menu->next_dialogue(dialogue_id, is_input_from_balloon);
 	return true;
 }
 

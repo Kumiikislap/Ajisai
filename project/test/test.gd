@@ -33,10 +33,10 @@ func _process(delta: float) -> void:
 		get_tree().create_timer(2).timeout.connect(await_me)
 		#is_fast_forward = true
 	pass
-func await_me():
+func await_me() -> void:
 	is_fast_forward = true
 	
-func show_dialogue(): pass
+func show_dialogue() -> void: pass
 	#dialogue_box = DialogueManager.show_dialogue_balloon_scene(BALLOON, dialogue_resource, 'start')
 	
 
@@ -65,7 +65,7 @@ func _unhandled_key_input(_event: InputEvent) -> void:
 		#wtf()
 		print("real")
 
-func wtf():
+func wtf() -> void:
 	#if what:
 		#var tween : Tween
 	#tween = create_tween()
@@ -79,5 +79,5 @@ func wtf():
 	tween.tween_callback(test)
 	#printerr("ja")
 	
-func test():
+func test() -> void:
 	printerr("test")

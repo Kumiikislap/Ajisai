@@ -1,4 +1,5 @@
 #include <cassert>
+#include <memory>
 #include "Ajisai.h"
 #include "core/AjisaiConstants.h"
 #include "features/movie/SceneMenu.h"
@@ -10,6 +11,7 @@
 #include "godot_cpp/classes/resource.hpp"
 #include "godot_cpp/classes/resource_loader.hpp"
 #include "godot_cpp/core/memory.hpp"
+#include "godot_cpp/core/print_string.hpp"
 #include "godot_cpp/variant/packed_int64_array.hpp"
 #include "godot_cpp/variant/typed_array.hpp"
 #include "godot_cpp/variant/variant.hpp"
@@ -20,7 +22,6 @@
 #include <godot_cpp/classes/node3d.hpp>
 #include <godot_cpp/classes/compressed_texture2d.hpp>
 #include "util/scene.hpp"
-
 
 Ajisai::Ajisai()
 {
@@ -36,6 +37,7 @@ void Ajisai::_ready()
 
 	pprint(cast);
 	bind_services();
+
 }
 
 void Ajisai::_notification(int notification)
@@ -84,4 +86,9 @@ void Ajisai::_bind_methods()
 	ClassDB::bind_method(D_METHOD("set_cast", "p_cast" ), &Ajisai::set_cast);
 	ClassDB::bind_method(D_METHOD("get_cast"), &Ajisai::get_cast);
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "cast", godot::PROPERTY_HINT_RESOURCE_TYPE, "CharactersResource"), "set_cast", "get_cast");
+}
+
+Ajisai::~Ajisai()
+{
+	print_line("aj gone");
 }

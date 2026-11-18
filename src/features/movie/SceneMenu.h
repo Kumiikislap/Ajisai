@@ -55,7 +55,7 @@ public:
 	void simulate_keys_for_states(SceneStateEnum::STATE go_to_state);
 
 	void start_dialogue();
-	void next_dialogue(String p_id);
+	void next_dialogue(String p_id, bool is_input_from_balloon);
 	void register_api();
 	void recieve_dialogue_id(StringName p_id);
 	void auto_dialogue();

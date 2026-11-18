@@ -21,12 +21,12 @@ class Ajisai : public Node
 {
 	GDCLASS(Ajisai, Node)
 
-	Ajisai();
-	~Ajisai() = default;
-
 	static void _bind_methods();
 
 public:
+	Ajisai();
+	~Ajisai();
+
 	void _ready() override;
 
 	void _exit_tree() override;

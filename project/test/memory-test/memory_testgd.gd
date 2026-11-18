@@ -11,7 +11,7 @@ var counter := 0
 func _ready() -> void:
 	#var start = Time.get_ticks_usec()
 	for sprites in max_sprites:
-		var sprite = Sprite2D.new()
+		var sprite := Sprite2D.new()
 		sprite.texture = WALLPAPER_SE_1A
 		array.append(sprite)
 		add_child(sprite)
@@ -21,29 +21,29 @@ func _ready() -> void:
 	#print((end-start)/100000.0)
 	loop()
 	looparray()
-	var start = Time.get_ticks_usec()
+	var start := Time.get_ticks_usec()
 	#printt()
 	print("sshi")
-	var end = Time.get_ticks_usec()
+	var end := Time.get_ticks_usec()
 	print((end-start)/1000000.0)
 
-func loop():
-	var start = Time.get_ticks_usec()
+func loop() -> void:
+	var start := Time.get_ticks_usec()
 	for child in get_children() as Array[Sprite2D]:
 		child.texture = THREESOME
 		#print("looping")
-	var end = Time.get_ticks_usec()
+	var end := Time.get_ticks_usec()
 	print((end-start)/1000000.0)
 
-func looparray():
-	var start = Time.get_ticks_usec()
+func looparray() -> void:
+	var start := Time.get_ticks_usec()
 	for child in array as Array[Sprite2D]:
 		child.texture = WALLPAPER_SE_1A
 		#print("looping")
-	var end = Time.get_ticks_usec()
+	var end := Time.get_ticks_usec()
 	print((end-start)/1000000.0)
 	
-func printt():
+func printt() -> void:
 	#var start = Time.get_ticks_usec()
 	print("sshi")
 	#var end = Time.get_ticks_usec()

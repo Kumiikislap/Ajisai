@@ -44,32 +44,58 @@ void CommandStack::execute_command(Ref<Command> cmd)
 		current_command +=1;
 		command_tip +=1;
 	}
+	if (not cmd->is_class("CommandDialogueLine") and (current_command == (command_tip -1)))
+	{
+		print_line("at tip exe");
+		dont_stop_at_next_dialogue_line = true;
+	}
+	else
+	{
+		dont_stop_at_next_dialogue_line = false;
+	}
 	pprint(command_stack);
-	pprint(current_command);
 }
 
 // this code is running on my hopes and prayers
 void CommandStack::undo_commands()
 {
-	if ( current_command <= 0 )
+	print_line(vformat("command_pos: %s ", current_command));
+	if ( current_command < 0 )
 	{
 		WARN_PRINT("cant undo, already at oldest");
 		return;
 	}
-	for ( current_command > 0; current_command--; )
+	// check if we're at tail
+	if ( current_command == 0)
 	{
-		print_line(current_command);
+	}
+
+	for ( current_command > 1; current_command --; )
+	{
+		//if (current_command < 0)
+		//{
+		//	print_line(vformat("return: %s ", current_command));
+		//	return;
+		//}
 		Command* cmd =  cast_to<Command>(command_stack[current_command]);
+		if (cmd->is_class("CommandDialogueLine") and dont_stop_at_next_dialogue_line)
+		{
+			dont_stop_at_next_dialogue_line = false;
+			undo_commands();
+			return;
+		}
 		cmd->undo();
 		if (cmd->is_class("CommandDialogueLine"))
 		{
 			return;
 		}
 	}
+	print_line(vformat("command_pos: %s ", current_command));
 }
 
-void CommandStack::redo_commands()
+void CommandStack::redo_commands(bool is_input_from_balloon)
 {
+	print_line(vformat("command_pos: %s ", current_command));
 	print_line(vformat("stack size : %s ", command_stack.size()));
 	if ( (current_command + 1) >= command_stack.size())
 	{
@@ -78,9 +104,31 @@ void CommandStack::redo_commands()
 	}
 	for ( current_command < command_stack.size(); current_command++;)
 	{
+		print_line(vformat("command_pos: %s ", current_command));
+		print_line(vformat("stack size : %s ", command_stack.size()));
 		Command* cmd =  cast_to<Command>(command_stack[current_command]);
-		cmd->execute();
-		if (cmd->is_class("CommandDialogueLine"))
+		if (not cmd->is_class("CommandDialogueLine") and (current_command + 1) == command_stack.size())
+		{
+			print_line("at tip");
+			dont_stop_at_next_dialogue_line = true;
+		}
+		//if ((current_command) >= command_stack.size())
+		//{
+		//	return;
+		//}
+
+		if (cmd->is_class("CommandDialogueLine") and !dont_stop_at_next_dialogue_line)
+		{
+			CommandDialogueLine* cmd_dia = cast_to<CommandDialogueLine>(cmd);
+			cmd_dia->execute(is_input_from_balloon);
+			return;
+		}
+		else if (not cmd->is_class("CommandDialogueLine"))
+		{
+			cmd->execute();
+		}
+
+		if ((current_command + 1 ) >= command_stack.size())
 		{
 			return;
 		}
@@ -95,11 +143,6 @@ void CommandStack::record_dialogue_line(StringName p_id)
 	}
 	print_line(vformat("current cmd %s",current_command));
 	print_line(vformat("current cmd tip %s",command_tip));
-	//if ((current_command + 1) < command_tip)
-	//{
-	//	WARN_PRINT("dl isnt saved!");
-	//	return;
-	//}
 	Ref<CommandDialogueLine> cmd = Ref<CommandDialogueLine>(memnew(CommandDialogueLine));
 	cmd->bind_director(scene_menu, p_id);
 	if (current_command == (command_tip -1 ) ) {
@@ -109,10 +152,10 @@ void CommandStack::record_dialogue_line(StringName p_id)
 		current_dialogue_id = p_id;
 		return;
 	}
+	// update current_command when clicking to balloon
 	if (current_command < command_stack.size())
 	{
-		current_command +=1;
-		pprint("u should be triggerred");
+		redo_commands(true);
 	}
 	pprint(command_stack);
 }

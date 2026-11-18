@@ -98,11 +98,11 @@ func configure_focus() -> void:
 
 	_previously_focused_item = items[0]
 
+
 	if auto_focus_first_item:
 		items[0].grab_focus()
 		
-	#print("from response")
-	#response_showed.emit()
+
 
 
 #region Internal
@@ -186,10 +186,3 @@ func _on_response_gui_input(event: InputEvent, item: Control, response: Variant)
 
 
 #endregion
-
-
-#func _on_gui_input(event: InputEvent) -> void:
-	#print("gui-rres")
-	##if event.is_action_pressed("skip_dialogue_line"):
-		##print("gui-rres")
-		#

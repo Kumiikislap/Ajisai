@@ -15,7 +15,7 @@ var happy := &"happy"
 var smile := &"smile"
 var shocked := &"shocked"
 
-func print(p_string : StringName ):
+func print(p_string : StringName ) -> void:
 	print(p_string)
 
 #enum {

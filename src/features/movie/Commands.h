@@ -8,7 +8,6 @@
 
 using namespace godot;
 
-// TODO CommandBreakpoint
 class CommandTest : public Command
 {
 	GDCLASS(CommandTest, Command)
@@ -65,6 +64,7 @@ protected:
 	Director* director;
 };
 
+// also the breakpoint
 class CommandDialogueLine: public Command
 {
 	GDCLASS(CommandDialogueLine, Command)
@@ -73,7 +73,7 @@ public:
 	CommandDialogueLine() = default;
 	~CommandDialogueLine() = default;
 	void bind_director(SceneMenu* p_scene, String p_id);
-	virtual bool execute() override;
+	virtual bool execute(bool is_input_from_balloon = false);
 	virtual void undo() override;
 
 protected:

@@ -38,7 +38,7 @@ public:
 	void api_test();
 	void execute_command(Ref<Command> cmd);
 	void undo_commands();
-	void redo_commands();
+	void redo_commands(bool is_input_from_balloon = false);
 
 	void record_dialogue_line(StringName p_id);
 	void show_actor(StringName p_actor);
@@ -54,7 +54,6 @@ protected:
 	static void _bind_methods();
 
 public:
-	bool is_from_undo_redo { false };
 
 private:
 	// TODO load saved command array
@@ -63,11 +62,11 @@ private:
 
 	int current_command = -1;
 	int command_tip = 0;
-	int max_command = 0;
-	bool dialogue_undo_count { 0 };
-	bool dialogue_redo_count { 0 };
+	const int max_command = 0;
 
 	StringName current_dialogue_id;
+
+	bool dont_stop_at_next_dialogue_line = false;
 
 	void pop_above_current_cmd();
 

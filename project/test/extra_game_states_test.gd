@@ -4,22 +4,22 @@ enum {
 	WHO = 1
 }
 
-var yumi = "mayumi"
+var yumi := "mayumi"
 
-func hello(string : String):
+func hello(_string : String) -> void:
 	print("from hell")
 
-func change_expression(actor: StringName, expression: StringName):
+func change_expression(_actor: StringName, _expression: StringName) -> void:
 	pass
 
-func add_actor():
+func add_actor() -> void:
 	pass
 
-func show_actor(actor : StringName):
+func show_actor(_actor : StringName) -> void:
 	pass
 
-func hide_actor(actor : StringName):
+func hide_actor(_actor : StringName) -> void:
 	pass
 
-func change_actor_position(actor: StringName, pos: Vector2):
+func change_actor_position(_actor: StringName, _pos: Vector2) -> void:
 	pass
