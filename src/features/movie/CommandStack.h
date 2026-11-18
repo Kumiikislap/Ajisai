@@ -57,6 +57,8 @@ public:
 	int cmd_idx = 0;
 	int cmd_tip = 9;
 	bool ignore_next_dialogue_line = false;
+	bool is_current_dialogue_command_class { false };
+	StringName last_command_class = "";
 private:
 	// TODO load saved command array
 	Ref<CommandResource> command_resource_stack;

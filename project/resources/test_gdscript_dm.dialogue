@@ -2,14 +2,15 @@ using MovieDataTest
 # needs to be autoloaded to be used in using whatever that is called
 
 ~ start
-#do hide_actor(Turdus)
+do hide_actor(Turdus)
+do hide_actor(Turdus)
+do hide_actor(Turdus)
 Miao : a [do show_actor(Turdus)]
 Miao : aaa1
 do hide_actor(Turdus)
 #do hide_actor(Turdus)
-Miao : aaaaa2
-Miao : aaaaa3
-#do hide_actor(Turdus)
+Miao : aaaaa2 
+Miao : aaaaa3 [do show_actor(Turdus)]
 Miao : aaaaa4
 Nathan: [[Hi|Hello|Howdy]], this is some dialogue. 
 do show_actor(Turdus)
@@ -19,7 +20,7 @@ Turdus: AAAAAAAAAAAAAAAAAAAAAAA  [do hide_actor(Turdus)]
 	\nAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.
 - bro
 	do show_actor(Turdus)
-	Miao: skip pls
+	Miao: skip pls [do hide_actor(Turdus)]
 	do hide_actor(Turdus)
 Turdus: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA.
 - First one
