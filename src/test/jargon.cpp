@@ -169,3 +169,27 @@
 	//std::cout << sizeof(*mem) << std::endl;
 	//std::cout << sizeof(Node2D) << std::endl;
 	//memfree(&mem[1]);
+	//int cmd_idx = 0;
+	//int cmd_tip = 9;
+
+	//for (cmd_idx; cmd_idx < 9; )
+	//{
+	//	print_line(cmd_idx);
+	//	if (cmd_idx == 5)
+	//		break;
+	//	cmd_idx ++;
+
+	//}
+
+	//for (cmd_idx; cmd_idx >= 0; cmd_idx --)
+	//{
+	//	if (cmd_idx == 5)
+	//		continue;
+	//	print_line(cmd_idx);
+	//}
+	//for (cmd_idx; cmd_idx >= 0; cmd_idx --)
+	//{
+	//	if (cmd_idx == 5)
+	//		continue;
+	//	print_line(cmd_idx);
+	//}
