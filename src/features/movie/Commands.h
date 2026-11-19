@@ -76,6 +76,8 @@ public:
 	virtual bool execute(bool is_input_from_balloon = false);
 	virtual void undo() override;
 
+	bool is_the_first_dialogue { false };
+
 protected:
 	static void _bind_methods(){};
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdint>
 #include "features/movie/Command.h"
 #include "features/movie/CommandResource.h"
 #include "godot_cpp/classes/object.hpp"
@@ -54,23 +53,25 @@ protected:
 	static void _bind_methods();
 
 public:
-	int cmd_idx = 0;
-	int cmd_tip = 9;
-	bool ignore_next_dialogue_line = false;
-	bool is_current_dialogue_command_class { false };
-	StringName last_command_class = "";
 private:
 	// TODO load saved command array
 	Ref<CommandResource> command_resource_stack;
 	TypedArray<Command> command_stack;
 
-	int current_command = -1;
-	int command_tip = 0;
-	const int max_command = 0;
+	int current_command { -1 };
+	int command_tip { 0 };
+	const int max_command { 0 };
 
 	StringName current_dialogue_id;
+	bool ignore_next_dialogue_line { false };
+	bool is_current_dialogue_command_class { false };
+	
+	bool is_the_first_dialogue_line { true };
+	int the_first_dialogue_index { 0 };
 
-	bool dont_stop_at_next_dialogue_line = false;
+	StringName last_command_class { "" };
+
+	bool dont_stop_at_next_dialogue_line { false };
 
 	void pop_above_current_cmd();
 
