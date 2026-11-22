@@ -53,6 +53,7 @@ class Director : public Node
 	//Actor* get_actor_from_scene(StringName p_name);
 
 	void set_cast(const Ref<CharactersResource>& p_cast);
+	TypedDictionary<StringName, Actor> get_actors() const;
 
 	//Ref<CharactersResource> get_cast() const;
 

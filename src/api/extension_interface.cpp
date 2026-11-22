@@ -41,7 +41,7 @@ namespace rl
     void initialize_static_objects()
     {
         //global_singleton = memnew(SGlobal);
-        //rl::engine::get()->register_singleton("SGlobal", SGlobal::get_ins());
+        //rl::engine::get()->register_singleton("SGlobal", SGlobal::get_ins());get_current_expression() const
 		//Engine::get_singleton()->register_singleton("DialogueManagerWrapper", memnew(DialogueManagerWrapper));
     }
 
@@ -75,10 +75,6 @@ namespace rl
 		GDREGISTER_CLASS(SceneStateFastForward);
 		GDREGISTER_CLASS(SceneStateNormal);
 
-		GDREGISTER_ABSTRACT_CLASS(Command)
-		GDREGISTER_CLASS(CommandStack)
-		GDREGISTER_CLASS(CommandTest)
-		GDREGISTER_CLASS(CommandResource)
 
 		GDREGISTER_RUNTIME_CLASS(Ajisai)
 		GDREGISTER_RUNTIME_CLASS(MemoryTest)
@@ -86,9 +82,16 @@ namespace rl
 		//godot::ClassDB::register_class<DialogueManagerWrapper>();
 
 
+		GDREGISTER_ABSTRACT_CLASS(Command)
+		GDREGISTER_CLASS(CommandStack)
+		GDREGISTER_CLASS(CommandTest)
+		GDREGISTER_CLASS(CommandResource)
+
 		GDREGISTER_CLASS(CommandActorVisibility)
 		GDREGISTER_CLASS(CommandActorPosition)
 		GDREGISTER_CLASS(CommandDialogueLine)
+		GDREGISTER_CLASS(CommandChangeActorPose)
+		GDREGISTER_CLASS(CommandChangeActorExpression)
         initialize_static_objects();
     }
 

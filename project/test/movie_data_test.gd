@@ -11,6 +11,7 @@ const left := Vector2(640 , y_axis)
 const right := Vector2( 1280 , y_axis)
 # expressions
 var neutral := &"neutral"
+var idle := &"idle"
 var happy := &"happy"
 var smile := &"smile"
 var shocked := &"shocked"

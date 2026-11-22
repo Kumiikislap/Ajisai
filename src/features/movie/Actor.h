@@ -43,16 +43,29 @@ class Actor : public Node2D
 
 	void set_name(const StringName p_name);
 	void set_fade_speed(const double p_speed);
+	void set_default_pose(const StringName p_pose);
+	void set_default_expression(const StringName p_expression);
 
 	StringName get_name() const;
 	double get_fade_speed() const;
+
+	StringName get_default_pose() const;
+	StringName get_default_expression() const;
+	StringName get_current_pose() const;
+	StringName get_current_expression() const;
+
 	
-	private:
+private:
 	static void _bind_methods();
 
 	Pose poseA;
 	Pose poseB;
 	Pose current_pose_struct;
+
+	StringName current_pose;
+	StringName current_expression;
+	StringName default_pose;
+	StringName default_expression;
 
 	StringName name;
 	double fade_speed { 0.5 }; 

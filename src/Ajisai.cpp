@@ -15,6 +15,7 @@
 #include "godot_cpp/variant/packed_int64_array.hpp"
 #include "godot_cpp/variant/typed_array.hpp"
 #include "godot_cpp/variant/variant.hpp"
+#include "test/InternalTest.h"
 #include "util/conversions.hpp"
 #include "util/debug.hpp"
 #include <sys/mman.h>

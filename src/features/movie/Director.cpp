@@ -135,6 +135,11 @@ void Director::set_cast(const Ref<CharactersResource>& p_cast)
 	cast_resource = p_cast;
 }
 
+TypedDictionary<StringName, Actor> Director::get_actors() const
+{
+	return actors;
+}
+
 void Director::_bind_methods()
 {
 

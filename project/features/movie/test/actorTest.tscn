@@ -3,47 +3,44 @@
 [ext_resource type="Script" uid="uid://bju4fqe88347r" path="res://features/movie/test/actor_test.gd" id="1_1x7bd"]
 [ext_resource type="SpriteFrames" uid="uid://q83omn7sqdgw" path="res://test/resource/TurdusSpriteFrames.tres" id="2_act2w"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_yeiut"]
-
 [node name="Actor" type="Actor" unique_id=1155618040]
 name = &"Turdus"
-fade_speed = 0.315
+fade_speed = 0.345
+default_pose = &"turdus"
+default_expression = &"idle"
 position = Vector2(741, 650)
 script = ExtResource("1_1x7bd")
 
 [node name="poseA" type="AnimatedSprite2D" parent="." unique_id=1669570077]
 z_as_relative = false
 sprite_frames = ExtResource("2_act2w")
-animation = &"turdus_happy"
+animation = &"turdus"
 
 [node name="exprA1" type="AnimatedSprite2D" parent="poseA" unique_id=1397433777]
-visible = false
 z_index = 1
 z_as_relative = false
 sprite_frames = ExtResource("2_act2w")
 animation = &"turdus_shocked"
 
 [node name="exprA2" type="AnimatedSprite2D" parent="poseA" unique_id=1283286501]
-visible = false
 z_index = 1
 z_as_relative = false
 sprite_frames = ExtResource("2_act2w")
-animation = &"turdus_smile"
+animation = &"turdus_shocked"
 
 [node name="poseB" type="AnimatedSprite2D" parent="." unique_id=1643297084]
 clip_children = 2
-material = SubResource("ShaderMaterial_yeiut")
 sprite_frames = ExtResource("2_act2w")
-animation = &"turdus_happy"
+animation = &"turdus"
 
 [node name="exprB1" type="AnimatedSprite2D" parent="poseB" unique_id=2052043313]
-visible = false
+z_index = 1
 z_as_relative = false
 sprite_frames = ExtResource("2_act2w")
 animation = &"turdus_happy"
 
 [node name="exprB2" type="AnimatedSprite2D" parent="poseB" unique_id=1127191187]
-visible = false
+z_index = 1
 z_as_relative = false
 sprite_frames = ExtResource("2_act2w")
 animation = &"turdus_shocked"

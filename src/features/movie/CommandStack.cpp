@@ -84,6 +84,7 @@ void CommandStack::undo_commands()
 				cmd->undo();
 				ignore_next_dialogue_line = false;
 				is_current_dialogue_command_class = true;
+				WARN_PRINT("cant undo, already at oldest");
 				return;
 			}
 		}
@@ -178,7 +179,8 @@ void CommandStack::record_dialogue_line(StringName p_id)
 		return;
 	}
 	Ref<CommandDialogueLine> cmd = Ref<CommandDialogueLine>(memnew(CommandDialogueLine));
-	cmd->bind_director(scene_menu, p_id);
+	cmd->bind_director(scene_menu);
+	cmd->bind_parameters(p_id);
 	if (current_command == (command_tip -1 ) ) {
 		command_stack.append(cmd);
 		current_command +=1;
@@ -209,13 +211,15 @@ void CommandStack::record_dialogue_line(StringName p_id)
 void CommandStack::show_actor(StringName p_actor)
 {
 	Ref<CommandActorVisibility> cmd = Ref<CommandActorVisibility>(memnew(CommandActorVisibility));
-	cmd->bind_director(director, p_actor, CommandActorVisibility::SHOW);
+	cmd->bind_director(director);
+	cmd->bind_parameters(p_actor, CommandActorVisibility::SHOW);
 	execute_command(cmd);
 }
 void CommandStack::hide_actor(StringName p_actor)
 {
 	Ref<CommandActorVisibility> cmd = Ref<CommandActorVisibility>(memnew(CommandActorVisibility));
-	cmd->bind_director(director, p_actor, CommandActorVisibility::HIDE);
+	cmd->bind_director(director);
+	cmd->bind_parameters(p_actor, CommandActorVisibility::HIDE);
 	execute_command(cmd);
 }
 
@@ -225,10 +229,18 @@ void CommandStack::change_actor_position(StringName p_actor, Vector2 pos)
 
 void CommandStack::change_pose(StringName p_actor, StringName p_pose)
 {
+	Ref<CommandChangeActorPose> cmd = Ref<CommandChangeActorPose>(memnew(CommandChangeActorPose));
+	cmd->bind_director(director);
+	cmd->bind_parameters(p_actor, p_pose);
+	execute_command(cmd);
 }
 
 void CommandStack::change_expression(StringName p_actor, StringName p_expression, bool p_is_cut)
 {
+	Ref<CommandChangeActorExpression> cmd = Ref<CommandChangeActorExpression>(memnew(CommandChangeActorExpression));
+	cmd->bind_director(director);
+	cmd->bind_parameters(p_actor, p_expression);
+	execute_command(cmd);
 }
 
 void CommandStack::set_command_idx(int p_idx)

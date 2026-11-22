@@ -1,13 +1,17 @@
 [gd_resource type="SpriteFrames" format=3 uid="uid://q83omn7sqdgw"]
 
-[ext_resource type="Texture2D" uid="uid://dn3msfgm3qvdw" path="res://test/movie/actors/Turdus/img/happy.png" id="1_24do4"]
+[ext_resource type="Texture2D" uid="uid://ct5c4ct2sgi5h" path="res://test/movie/actors/Turdus/img/turdus-body.png" id="1_jh5l3"]
 [ext_resource type="Texture2D" uid="uid://bf6c46wukygj0" path="res://test/movie/actors/Turdus/img/neutral.png" id="1_s7758"]
 [ext_resource type="Texture2D" uid="uid://bvmecqx2tc0fe" path="res://test/movie/actors/Turdus/img/smile.png" id="2_24do4"]
-[ext_resource type="Texture2D" uid="uid://cmy56qld32rk8" path="res://test/movie/actors/Turdus/img/turdus-shck.png" id="4_mdylq"]
+[ext_resource type="Texture2D" uid="uid://byyrdy0ym2qu8" path="res://test/movie/actors/Turdus/img/turdus-happy.png" id="4_e5i15"]
+[ext_resource type="Texture2D" uid="uid://bwohb8hn40ca1" path="res://test/movie/actors/Turdus/img/turdus-shocked.png" id="5_f8o4w"]
 
 [resource]
 animations = [{
 "frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_jh5l3")
+}, {
 "duration": 4.0,
 "texture": ExtResource("2_24do4")
 }, {
@@ -20,7 +24,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_24do4")
+"texture": ExtResource("4_e5i15")
 }],
 "loop": 0,
 "name": &"turdus_happy",
@@ -33,13 +37,13 @@ animations = [{
 "duration": 14.0,
 "texture": ExtResource("1_s7758")
 }],
-"loop": 1,
+"loop": 0,
 "name": &"turdus_idle",
 "speed": 24.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("4_mdylq")
+"texture": ExtResource("5_f8o4w")
 }],
 "loop": 1,
 "name": &"turdus_shocked",
