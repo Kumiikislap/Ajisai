@@ -33,6 +33,7 @@ public:
 	};
 
 	void bind_directors(SceneMenu* scene_menu, Director* director);
+	void _ready();
 
 	void api_test();
 	void execute_command(Ref<Command> cmd);
@@ -40,6 +41,7 @@ public:
 	void redo_commands(bool is_input_from_balloon = false);
 
 	void record_dialogue_line(StringName p_id);
+	void record_dialogue_end();
 	void show_actor(StringName p_actor);
 	void hide_actor(StringName p_actor);
 	void change_actor_position(StringName p_actor, Vector2 pos);
@@ -49,11 +51,17 @@ public:
 	void set_command_idx(int p_idx);
 	int get_command_idx();
 
+private:
 protected:
 	static void _bind_methods();
 
 public:
 private:
+	enum TraverseHistory {
+		ONE_STEP,
+		TWO_STEP,
+	};
+
 	// TODO load saved command array
 	Ref<CommandResource> command_resource_stack;
 	TypedArray<Command> command_stack;
@@ -62,12 +70,12 @@ private:
 	int command_tip { 0 };
 	const int max_command { 0 };
 
+	TraverseHistory undo { TWO_STEP };
+	TraverseHistory redo { TWO_STEP };
+
 	StringName current_dialogue_id;
-	bool ignore_next_dialogue_line { false };
-	bool is_current_dialogue_command_class { false };
 	
-	bool is_the_first_dialogue_line { true };
-	int the_first_dialogue_index { 0 };
+	bool is_the_first_dialogue_end { true };
 
 	StringName last_command_class { "" };
 

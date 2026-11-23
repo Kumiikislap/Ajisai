@@ -90,8 +90,10 @@ namespace rl
 		GDREGISTER_CLASS(CommandActorVisibility)
 		GDREGISTER_CLASS(CommandActorPosition)
 		GDREGISTER_CLASS(CommandDialogueLine)
+		GDREGISTER_CLASS(CommandDialogueEnd)
 		GDREGISTER_CLASS(CommandChangeActorPose)
 		GDREGISTER_CLASS(CommandChangeActorExpression)
+
         initialize_static_objects();
     }
 

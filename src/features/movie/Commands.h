@@ -85,13 +85,30 @@ public:
 	virtual bool execute(bool is_input_from_balloon = false);
 	virtual void undo() override;
 
-	bool is_the_first_dialogue { false };
-
 protected:
 	static void _bind_methods(){};
 
 	SceneMenu* scene_menu;
 	String dialogue_id;
+};
+
+// the redo breakpoint
+class CommandDialogueEnd: public Command
+{
+	GDCLASS(CommandDialogueEnd, Command)
+
+public:
+	CommandDialogueEnd() = default;
+	~CommandDialogueEnd() = default;
+	virtual void bind_director() override;
+	virtual bool execute() override;
+	virtual void undo() override;
+
+	bool is_the_first_dialogue_end { false };
+
+protected:
+	static void _bind_methods(){};
+
 };
 
 class CommandChangeActorPose: public Command

@@ -75,6 +75,10 @@ public:
 	CanvasLayer* get_vertical_dialogue_box()const; 
 
 	Director* director { nullptr };
+private:
+	void _connect_signals_to_dialogue_box();
+	void _disconnect_signals_to_dialogue_box();
+	void _record_dialogue_ended();
 protected:
 	static void _bind_methods();
 

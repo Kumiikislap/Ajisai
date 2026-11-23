@@ -3,16 +3,18 @@ using MovieDataTest
 
 ~ start
 #do hide_actor(Turdus) 
-do show_actor(Turdus)
+#do show_actor(Turdus)
 #do hide_actor(Turdus) 
 #do hide_actor(Turdus) 
 #do hide_actor(Turdus)
-Miao : a 
+Miao : [do show_actor(Turdus)] a 
+#do show_actor(Turdus)
+#do show_actor(Turdus)
 do change_expression(Turdus, happy)
 Miao : aaa1 [do show_actor(Turdus)] 
 #do hide_actor(Turdus)
 #do hide_actor(Turdus)
-Miao : aaaaa2 hmmmmmmmmmmmmmmmmmm [do change_expression(Turdus, shocked)] AAAAAAAAAAAAAAAAAAAAAAAAAA
+Miao : aaaaa2 
 Miao : aaaaa3 [do show_actor(Turdus)]
 Miao : aaaaa4
 do change_expression(Turdus, idle)

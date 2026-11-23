@@ -27,6 +27,10 @@ void CommandStack::bind_directors(SceneMenu* p_scene_menu, Director* p_director)
 	director = p_director;
 }
 
+void CommandStack::_ready()
+{
+}
+
 void CommandStack::api_test()
 {
 	pprint("miao");
@@ -48,22 +52,21 @@ void CommandStack::execute_command(Ref<Command> p_cmd)
 		command_tip +=1;
 
 		// add commands that go here are not dialogue commands anyway
-		is_current_dialogue_command_class = false;
-		print_line(vformat("is_current_dialogue_command: %s", is_current_dialogue_command_class));
+		//print_line(vformat("is_current_dialogue_command: %s", is_current_dialogue_command_class));
+		print_line(vformat("command_pos: %s ", current_command));
+		print_line(vformat("tip class: %s ", command_stack[current_command]));
 	}
 	pprint(command_stack);
 }
 
 // TODO Document this monstrosity
+// skip the animation when undo redoing
 
 // this code is running on my hopes and prayers
-// 1 stop at dialogue command
-// I should've made this a state machine :skull:
+// I should've made this a state machine :skull: -- its now cleaner yay
+
 void CommandStack::undo_commands()
 {
-	bool is_last_command_dialogue = false;
-	bool local_last_dialogue = true;
-	bool local_dialogue = is_current_dialogue_command_class;
 	if ( current_command <= 0 )
 	{
 		WARN_PRINT("cant undo, already at oldest"); return;
@@ -71,105 +74,78 @@ void CommandStack::undo_commands()
 
 	for ( int i = current_command; current_command > 0; i --)
 	{
-		//print_line(vformat("current cmd tip %s",command_tip));
-		//print_line(vformat("command_pos: %s ", current_command));
-		//print_line(vformat("is_dia: %s ", is_current_dialogue_command_class));
 		if ( i == -1){
 			return;
 		}
+		redo = TWO_STEP;
 		Command* cmd =  cast_to<Command>(command_stack[current_command]);
-		if (cmd->is_class("CommandDialogueLine")){
-			CommandDialogueLine* cmd_dia = cast_to<CommandDialogueLine>(cmd);
-			if (cmd_dia->is_the_first_dialogue){
-				cmd->undo();
-				ignore_next_dialogue_line = false;
-				is_current_dialogue_command_class = true;
+		current_command --;
+		cmd =  cast_to<Command>(command_stack[current_command]);
+		if (cmd->is_class("CommandDialogueEnd"))
+		{
+			CommandDialogueEnd* cmd_dia_end = cast_to<CommandDialogueEnd>(cmd);
+			if (cmd_dia_end->is_the_first_dialogue_end){
 				WARN_PRINT("cant undo, already at oldest");
-				return;
+				break;
 			}
 		}
-		if (local_dialogue)
+		if (cmd->is_class("CommandDialogueEnd"))
 		{
-			current_command --;
-			local_last_dialogue = false;
-			local_dialogue = false;
-			//print_line("ok current is dia , but now changed");
-			continue;
-		}
-		else if (not is_current_dialogue_command_class and local_last_dialogue ){
-			ignore_next_dialogue_line = true;
-			//print_line("ur not suppose");
-		}
-		if (cmd->is_class("CommandDialogueLine") and !ignore_next_dialogue_line ) 
-		{
-			cmd->undo();
-			is_last_command_dialogue = true;
-			//print_line("ur suppose");
-			break;
-		}
-		print_line(vformat("ignore: %s ", ignore_next_dialogue_line));
-		if (cmd->is_class("CommandDialogueLine") and ignore_next_dialogue_line )
-		{
-			ignore_next_dialogue_line = false;
-			current_command --;
-			local_last_dialogue = false;
-			//print_line("did you even flip suppose");
-			continue;
+			if (undo == TWO_STEP) {
+				print_line(vformat("ignore at end: %s ", current_command));
+				undo = ONE_STEP;
+				continue;
+			}
+			if (undo == ONE_STEP) {
+				print_line(vformat("Stopped at dia end: %s ", current_command));
+				break;
+			}
 		}
 		cmd->undo();
-		current_command --;
-		is_last_command_dialogue = false;
-		//print_line("undo cmds");
 	}
-	is_current_dialogue_command_class = is_last_command_dialogue;
-	print_line(vformat("is dia current class: %s", is_current_dialogue_command_class));
 	print_line(vformat("command_pos: %s ", current_command));
+	print_line(vformat("tip class: %s ", command_stack[current_command]));
 }
 
 void CommandStack::redo_commands(bool is_input_from_balloon)
 {
-	bool is_last_command_dialogue = false;
-	bool trigger_ignore = true;
 	if ( (current_command + 1) >= command_tip)
 	{
 		WARN_PRINT("cant redo, already at newest");
 		return;
 	}
+	undo = TWO_STEP;
 	for(int i = current_command; current_command < command_tip; i++)
 	{
-		if (not is_current_dialogue_command_class and trigger_ignore)
-		{
-			// skip next dialogue
-			ignore_next_dialogue_line = true;
-			//print_line("ignored next dia" );
+		if ((current_command +1) < command_tip){
+			current_command ++;
 		}
-		current_command ++;
 		Command* cmd =  cast_to<Command>(command_stack[current_command]);
-		if (cmd->is_class("CommandDialogueLine") and !ignore_next_dialogue_line)
+		if (cmd->is_class("CommandDialogueEnd"))
+		{
+			if (redo == TWO_STEP) {
+				print_line(vformat("ignore at end: %s ", current_command));
+				redo = ONE_STEP;
+				continue;
+			}
+			if (redo == ONE_STEP) {
+				print_line(vformat("Stopped at dia end: %s ", current_command));
+				break;
+			}
+		}
+		if (cmd->is_class("CommandDialogueLine"))
 		{
 			CommandDialogueLine* cmd_dia = cast_to<CommandDialogueLine>(cmd);
 			cmd_dia->execute(is_input_from_balloon);
-			is_last_command_dialogue = true;
-			//print_line("dia redoed");
-			break;
-		}
-		if (cmd->is_class("CommandDialogueLine") and ignore_next_dialogue_line )
-		{
-			ignore_next_dialogue_line = false;
-			trigger_ignore = false;
-			//print_line("did you even flip suppose redo " );
+			print_line("dia redoed");
 			continue;
-		}
-		if (!cmd->is_class("CommandDialogueLine") and (current_command +1))
-		{
 		}
 		if ((current_command +1) >= command_tip)
 			break;
 		cmd->execute();
-		is_last_command_dialogue = false;
 	}
-	is_current_dialogue_command_class = is_last_command_dialogue;
-	print_line(vformat("is dia current class: %s", is_current_dialogue_command_class));
+	print_line(vformat("command_pos: %s ", current_command));
+	print_line(vformat("tip class: %s ", command_stack[current_command]));
 }
 
 void CommandStack::record_dialogue_line(StringName p_id)
@@ -187,14 +163,6 @@ void CommandStack::record_dialogue_line(StringName p_id)
 		command_tip +=1;
 		current_dialogue_id = p_id;
 
-		is_current_dialogue_command_class = true;
-
-		if(is_the_first_dialogue_line){
-			cmd->is_the_first_dialogue = true;
-			is_the_first_dialogue_line = false;
-		}
-
-		print_line(vformat("is_current_dialogue_command: %s", is_current_dialogue_command_class));
 		pprint(command_stack);
 		print_line(vformat("current cmd %s",current_command));
 		print_line(vformat("current cmd tip %s",command_tip));
@@ -205,6 +173,30 @@ void CommandStack::record_dialogue_line(StringName p_id)
 	{
 		redo_commands(true);
 	}
+	pprint(command_stack);
+}
+
+void CommandStack::record_dialogue_end()
+{
+	//if (current_command < command_tip)
+	//	return;
+	Ref<CommandDialogueEnd> cmd = Ref<CommandDialogueEnd>(memnew(CommandDialogueEnd));
+	if (current_command == (command_tip -1) ) {
+		command_stack.append(cmd);
+		current_command +=1;
+		command_tip +=1;
+
+		if(is_the_first_dialogue_end){
+			cmd->is_the_first_dialogue_end = true;
+			is_the_first_dialogue_end = false;
+		}
+
+		// add commands that go here are not dialogue commands anyway
+		//is_current_dialogue_command_class = false;
+		//print_line(vformat("is_current_dialogue_command: %s", is_current_dialogue_command_class));
+	}
+	print_line(vformat("command_pos: %s ", current_command));
+	print_line(vformat("tip class: %s ", command_stack[current_command]));
 	pprint(command_stack);
 }
 

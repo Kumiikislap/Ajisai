@@ -82,6 +82,8 @@ void SceneMenu::init_from_gdscript()
 	current_dialogue_box = horizontal_dialogue_box;
 	assert(current_dialogue_box->has_signal("emit_dialogue_id"));
 	current_dialogue_box->connect("emit_dialogue_id", callable_mp(this, &SceneMenu::recieve_dialogue_id));
+	current_dialogue_box->connect("signal_dialogue_line_ended",callable_mp(this, &SceneMenu::_record_dialogue_ended));
+	_record_dialogue_ended();
 
 	command_stack->bind_directors(this, director);
 
@@ -220,6 +222,12 @@ void SceneMenu::recieve_dialogue_id(StringName p_id)
 	command_stack->record_dialogue_line(p_id);
 }
 
+void SceneMenu::_record_dialogue_ended()
+{
+	print_line("ENDED");
+	command_stack->record_dialogue_end();
+}
+
 void SceneMenu::register_api()
 {
 	assert(horizontal_dialogue_box->has_method("register_api"));
@@ -295,6 +303,19 @@ SceneStates* SceneMenu::get_scene_state() const
 	return current_state;
 }
 
+void SceneMenu::show_dialogue_box(DialogueBox p_box)
+{
+}
+
+void SceneMenu::hide_dialogue_box(DialogueBox p_box)
+{
+}
+void SceneMenu::_connect_signals_to_dialogue_box()
+{
+}
+void SceneMenu::_disconnect_signals_to_dialogue_box()
+{
+}
 SceneMenu::~SceneMenu()
 {
 	Array states_ = states.values();
@@ -307,10 +328,3 @@ SceneMenu::~SceneMenu()
 	memdelete(command_stack);
 }
 
-void SceneMenu::show_dialogue_box(DialogueBox p_box)
-{
-}
-
-void SceneMenu::hide_dialogue_box(DialogueBox p_box)
-{
-}

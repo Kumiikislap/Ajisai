@@ -115,6 +115,20 @@ void CommandDialogueLine::undo()
 	execute();
 }
 
+void CommandDialogueEnd::bind_director()
+{
+}
+
+bool CommandDialogueEnd::execute()
+{
+	return true;
+}
+
+void CommandDialogueEnd::undo()
+{
+	execute();
+}
+
 void CommandChangeActorPose::bind_director(Director* p_director)
 {
 	director = p_director;

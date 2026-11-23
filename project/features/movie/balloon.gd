@@ -6,6 +6,7 @@ class_name Balloon extends CanvasLayer
 
 ## Recieved by SceneMenu in GDE
 signal emit_dialogue_id(id: StringName)
+signal signal_dialogue_line_ended
 
 ## The dialogue resource
 @export var dialogue_resource: DialogueResource
@@ -96,6 +97,7 @@ func _ready() -> void:
 	
 	# for auto mode
 	dialogue_label.finished_typing.connect(auto_progress)
+	dialogue_label.finished_typing.connect(dialogue_line_ended)
 	auto_timer.timeout.connect(next_dialogue)
 	auto_timer.one_shot = true
 	add_child(auto_timer)
@@ -318,6 +320,10 @@ func fast_forward() -> void:
 	if !dialogue_line or dialogue_line.responses.size() > 0:
 		return
 	next(dialogue_line.next_id)
+
+
+func dialogue_line_ended() -> void:
+	signal_dialogue_line_ended.emit()
 
 
 ## called from GDE
